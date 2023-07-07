@@ -4,7 +4,7 @@
     </div>
 </template>
 <script>
-import Layout_page from "./layout_page.vue";
+import Layout_page from "../layout/layout_page.vue";
 import {Link} from '@inertiajs/vue3'
 export default {
     layout: Layout_page,

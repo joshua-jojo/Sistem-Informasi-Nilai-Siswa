@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\pengaturan\PengaturanIndexController;
+use App\Http\Controllers\pengaturan\ProfilSekolahController;
+use App\Http\Controllers\pengaturan\ProfilUserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -21,3 +24,8 @@ Route::get('/', function () {
 Route::get('/enjoy', function () {
     return Inertia::render('enjoy_page');
 })->name('enjoy');
+
+Route::group(['prefix' => 'pengaturan', 'as' => 'pengaturan.'], function () {
+    Route::resource('profil-sekolah', ProfilSekolahController::class);
+    Route::resource('profil-user', ProfilUserController::class);
+});
