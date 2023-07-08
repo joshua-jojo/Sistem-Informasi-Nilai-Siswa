@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.bg-success {
+    @apply bg-green-200
+}
+.bg-warning {
+    @apply bg-yellow-100
+}
+.bg-danger {
+    @apply bg-red-300
+}
+.bg-active {
+    @apply bg-sky-400
+}

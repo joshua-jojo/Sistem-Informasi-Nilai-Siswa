@@ -56,9 +56,9 @@ export default {
 </script>
 
 <template>
-    <div class="h-screen flex flex-col">
+    <div class="h-screen flex flex-col relative">
         <div
-            class="navbar bg-base-100 shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] z-50"
+            class="navbar bg-base-100 shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px] z-50 absolute top-0"
         >
             <div class="flex-1">
                 <a class="btn btn-ghost normal-case text-xl">daisyUI</a>
@@ -88,7 +88,7 @@ export default {
                 </div>
             </div>
         </div>
-        <div class="h-full bg-base-100 flex gap-2 w-screen px-4">
+        <div class="h-full bg-base-100 flex gap-2 w-screen px-4 overflow-hidden mt-16">
             <div class="bg-base-100 py-4 w-[70px] z-10">
                 <ul
                     class="menu h-max rounded-box menu-vertical shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px]"
@@ -168,8 +168,8 @@ export default {
                     </li>
                 </ul>
             </div>
-            <div class="z-0 py-4 px-4 flex flex-col">
-                <div class="">
+            <div class="z-0 py-4 px-4 flex flex-col w-full">
+                <div class="w-full">
                     <div class="text-sm breadcrumbs h-[40px] overflow-hidden">
                         <ul class="z-0">
                             <transition-group name="menu">
@@ -189,8 +189,10 @@ export default {
                         </ul>
                     </div>
                 </div>
-                <div class="overflow-x-auto p-4">
-                    <slot></slot>
+                <div class="overflow-x-auto w-full card shadow-lg mt-4">
+                    <div class="w-full card-body">
+                        <slot></slot>
+                    </div>
                 </div>
             </div>
         </div>
