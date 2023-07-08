@@ -9,6 +9,9 @@ export default {
         };
     },
     methods: {
+        dashboard() {
+            router.get(route("dashboard.index"));
+        },
         profil_user() {
             router.get(route("pengaturan.profil-user.index"));
         },
@@ -46,6 +49,7 @@ export default {
             <div class="bg-base-100 py-4 w-[70px] z-10">
                 <ul
                     class="menu h-max rounded-box menu-vertical shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px]"
+                    :key="store.state.page.judul"
                 >
                     <li
                         class="text-[20px] h-[40px] dropdown dropdown-right dropdown-hover"
@@ -58,7 +62,7 @@ export default {
                             class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
                         >
                             <li class="menu-title">Dashboard</li>
-                            <li><a>Dashboard</a></li>
+                            <li @click="dashboard"><a>Dashboard</a></li>
                         </ul>
                     </li>
                     <li
@@ -88,6 +92,8 @@ export default {
                             class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
                         >
                             <li class="menu-title">Master</li>
+                            <li><a>User</a></li>
+                            <li><a>Wali Murid</a></li>
                             <li><a>Siswa</a></li>
                             <li><a>Guru</a></li>
                             <li><a>Jurusan</a></li>
@@ -118,7 +124,7 @@ export default {
             <div class="z-0 py-4 px-4 flex flex-col">
                 <div class="">
                     <div class="text-sm breadcrumbs h-[40px] overflow-hidden">
-                        <ul>
+                        <ul class="z-0">
                             <transition-group name="menu">
                                 <li
                                     v-if="store.state.page.bagian"
@@ -174,12 +180,12 @@ export default {
 .menu-leave-from {
     transform: translateY(0);
     opacity: 1;
-    z-index: 2;
+    z-index: 5;
 }
 .menu-leave-to {
     transform: translateY(100px);
     opacity: 0;
-    z-index: 2;
+    z-index: 5;
 }
 .menu-leave-active {
     animation: slide-out-bottom 0.3s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
@@ -189,12 +195,12 @@ export default {
     0% {
         transform: translateY(0);
         opacity: 1;
-        z-index: 2;
+        z-index: 5;
     }
     100% {
         transform: translateY(100px);
         opacity: 0;
-        z-index: 2;
+        z-index: 5;
     }
 }
 </style>

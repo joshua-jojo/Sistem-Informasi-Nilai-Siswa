@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\dashboard\DashboardController;
 use App\Http\Controllers\pengaturan\PengaturanIndexController;
 use App\Http\Controllers\pengaturan\ProfilSekolahController;
 use App\Http\Controllers\pengaturan\ProfilUserController;
@@ -29,3 +30,5 @@ Route::group(['prefix' => 'pengaturan', 'as' => 'pengaturan.'], function () {
     Route::resource('profil-sekolah', ProfilSekolahController::class);
     Route::resource('profil-user', ProfilUserController::class);
 });
+
+Route::resource('dashboard', DashboardController::class);
