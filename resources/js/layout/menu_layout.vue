@@ -21,6 +21,30 @@ export default {
         absensi() {
             router.get(route("laporan.absensi.index"));
         },
+        ekskul() {
+            router.get(route("master.ekskul.index"));
+        },
+        guru() {
+            router.get(route("master.guru.index"));
+        },
+        jurusan() {
+            router.get(route("master.jurusan.index"));
+        },
+        kelas() {
+            router.get(route("master.kelas.index"));
+        },
+        mata_pelajaran() {
+            router.get(route("master.mata-pelajaran.index"));
+        },
+        siswa() {
+            router.get(route("master.siswa.index"));
+        },
+        user() {
+            router.get(route("master.user.index"));
+        },
+        wali_murid() {
+            router.get(route("master.wali-murid.index"));
+        },
         profil_user() {
             router.get(route("pengaturan.profil-user.index"));
         },
@@ -39,19 +63,29 @@ export default {
             <div class="flex-1">
                 <a class="btn btn-ghost normal-case text-xl">daisyUI</a>
             </div>
-            <div class="flex-none">
-                <ul class="menu menu-horizontal px-1">
-                    <li><a>Link</a></li>
-                    <li>
-                        <details>
-                            <summary>Parent</summary>
-                            <ul class="p-2 bg-base-100">
-                                <li><a>Link 1</a></li>
-                                <li><a>Link 2</a></li>
-                            </ul>
-                        </details>
-                    </li>
-                </ul>
+            <div class="flex-none gap-2">
+                <div class="dropdown dropdown-end">
+                    <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+                        <div class="w-10 rounded-full">
+                            <img
+                                src="/images/stock/photo-1534528741775-53994a69daeb.jpg"
+                            />
+                        </div>
+                    </label>
+                    <ul
+                        tabindex="0"
+                        class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52"
+                    >
+                        <li>
+                            <a class="justify-between">
+                                Profile
+                                <span class="badge">New</span>
+                            </a>
+                        </li>
+                        <li><a>Settings</a></li>
+                        <li><a>Logout</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
         <div class="h-full bg-base-100 flex gap-2 w-screen px-4">
@@ -85,7 +119,9 @@ export default {
                             class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
                         >
                             <li class="menu-title">Laporan</li>
-                            <li @click="nilai_akademik"><a>Nilai Akademik</a></li>
+                            <li @click="nilai_akademik">
+                                <a>Nilai Akademik</a>
+                            </li>
                             <li @click="rapor"><a>Rapor</a></li>
                             <li @click="absensi"><a>Absensi</a></li>
                         </ul>
@@ -101,14 +137,16 @@ export default {
                             class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
                         >
                             <li class="menu-title">Master</li>
-                            <li><a>User</a></li>
-                            <li><a>Wali Murid</a></li>
-                            <li><a>Siswa</a></li>
-                            <li><a>Guru</a></li>
-                            <li><a>Jurusan</a></li>
-                            <li><a>Kelas</a></li>
-                            <li><a>Mata Pelajaran</a></li>
-                            <li><a>Ekskul</a></li>
+                            <li @click="user"><a>User</a></li>
+                            <li @click="wali_murid"><a>Wali Murid</a></li>
+                            <li @click="siswa"><a>Siswa</a></li>
+                            <li @click="guru"><a>Guru</a></li>
+                            <li @click="jurusan"><a>Jurusan</a></li>
+                            <li @click="kelas"><a>Kelas</a></li>
+                            <li @click="mata_pelajaran">
+                                <a>Mata Pelajaran</a>
+                            </li>
+                            <li @click="ekskul"><a>Ekskul</a></li>
                         </ul>
                     </li>
                     <li
@@ -171,7 +209,8 @@ export default {
     z-index: 1;
 }
 .menu-enter-active {
-    animation: slide-in-top 0.3s 0.3s cubic-bezier(0.455, 0.03, 0.515, 0.955) both;
+    animation: slide-in-top 0.3s 0.3s cubic-bezier(0.455, 0.03, 0.515, 0.955)
+        both;
 }
 
 @keyframes slide-in-top {

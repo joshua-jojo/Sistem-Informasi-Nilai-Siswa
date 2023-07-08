@@ -7,12 +7,15 @@ export default {
         const store = useStore()
         store.state.page.bagian = "Master"
         store.state.page.judul = "Mata Pelajaran"
+        return {
+            store
+        }
     }
 }
 </script>
 
 <template>
     <div>
-        Dashboard
+       {{  store.state.page.judul }}
     </div>
 </template>

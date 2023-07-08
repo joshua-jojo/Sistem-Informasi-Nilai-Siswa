@@ -2,11 +2,19 @@
 
 use App\Http\Controllers\absensi\AbsensiController;
 use App\Http\Controllers\dashboard\DashboardController;
+use App\Http\Controllers\ekskul\EkskulController;
+use App\Http\Controllers\guru\GuruController;
+use App\Http\Controllers\jurusan\JurusanController;
+use App\Http\Controllers\kelas\KelasController;
+use App\Http\Controllers\mata_pelajaran\MataPelajaranController;
 use App\Http\Controllers\nilai_akademik\NilaiAkademikController;
 use App\Http\Controllers\pengaturan\PengaturanIndexController;
 use App\Http\Controllers\pengaturan\ProfilSekolahController;
 use App\Http\Controllers\pengaturan\ProfilUserController;
 use App\Http\Controllers\rapor\RaporController;
+use App\Http\Controllers\siswa\SiswaController;
+use App\Http\Controllers\user\UserController;
+use App\Http\Controllers\wali_murid\WaliMuridController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -38,6 +46,17 @@ Route::group(['prefix' => 'laporan', 'as' => 'laporan.'], function () {
     Route::resource('nilai-akademik', NilaiAkademikController::class);
     Route::resource('absensi', AbsensiController::class);
     Route::resource('rapor', RaporController::class);
+});
+
+Route::group(['prefix' => 'master', 'as' => 'master.'], function () {
+    Route::resource('ekskul', EkskulController::class);
+    Route::resource('guru', GuruController::class);
+    Route::resource('jurusan', JurusanController::class);
+    Route::resource('kelas', KelasController::class);
+    Route::resource('mata-pelajaran', MataPelajaranController::class);
+    Route::resource('siswa', SiswaController::class);
+    Route::resource('user', UserController::class);
+    Route::resource('wali-murid', WaliMuridController::class);
 });
 
 Route::resource('dashboard', DashboardController::class);
