@@ -12,6 +12,15 @@ export default {
         dashboard() {
             router.get(route("dashboard.index"));
         },
+        nilai_akademik() {
+            router.get(route("laporan.nilai-akademik.index"));
+        },
+        rapor() {
+            router.get(route("laporan.rapor.index"));
+        },
+        absensi() {
+            router.get(route("laporan.absensi.index"));
+        },
         profil_user() {
             router.get(route("pengaturan.profil-user.index"));
         },
@@ -76,9 +85,9 @@ export default {
                             class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
                         >
                             <li class="menu-title">Laporan</li>
-                            <li><a>Nilai Akademik</a></li>
-                            <li><a>Rapor</a></li>
-                            <li><a>Absensi</a></li>
+                            <li @click="nilai_akademik"><a>Nilai Akademik</a></li>
+                            <li @click="rapor"><a>Rapor</a></li>
+                            <li @click="absensi"><a>Absensi</a></li>
                         </ul>
                     </li>
                     <li
