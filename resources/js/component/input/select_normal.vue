@@ -1,12 +1,17 @@
 <script setup>
+import { ref,defineEmits,watch } from "vue";
 const props = defineProps({
     placeholder: String,
     name: String,
     error: String,
     title: String,
+    label: String,
+    modelValue: Number,
+    get: String,
+    data: Array,
 });
 
-const data = ["1", "2", "3"];
+const emit = defineEmits(['update:modelValue'])
 </script>
 <template lang="">
     <div class="form-control">
@@ -15,11 +20,18 @@ const data = ["1", "2", "3"];
         </label>
         <select
             :name="props.name"
-            type="text"
-            class="select select-sm select-bordered w-full"
-            :placeholder="props.placeholder"
+            :value="props.modelValue"
+            @change="emit('update:modelValue',$event.target.value)"
+            class="select select-sm select-bordered w-full capitalize"
         >
-            <option value="" v-for="(item, index) in data" :key="index">{{item}}</option>
+        <option disabled selected value="">{{props.placeholder}}</option>
+            <option
+                :value="item[props.get]"
+                v-for="(item, index) in props.data"
+                :key="index"
+            >
+                {{ item[props.label] }}
+            </option>
         </select>
         <label class="label" v-if="props.error">
             <span class="label-text-alt text-error">{{ props.error }}</span>

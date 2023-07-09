@@ -2,21 +2,53 @@
 import Textarea_normal from "../../component/input/textarea_normal.vue";
 import Select_normal from "../../component/input/select_normal.vue";
 import Input_normal from "../../component/input/input_normal.vue";
+import Input_password from "../../component/input/input_password.vue";
 import Modal_normal from "../../component/modal/modal_normal.vue";
 import menu_layout from "../../layout/menu_layout.vue";
 import { useStore } from "vuex";
+import { useForm } from "@inertiajs/vue3";
 export default {
     layout: menu_layout,
+    props: {
+        role: Array,
+        user: Array,
+    },
     components: {
         Modal_normal,
         Input_normal,
         Textarea_normal,
         Select_normal,
+        Input_password,
     },
     setup() {
         const store = useStore();
+        const form_tambah = useForm({
+            nama: "",
+            username: "",
+            password: "",
+            password_confirmation: "",
+            no_hp: "",
+            status: "",
+            alamat: "",
+            role_id: null,
+        });
+
         store.state.page.bagian = "Master";
         store.state.page.judul = "User";
+
+        return {
+            form_tambah,
+        };
+    },
+    methods: {
+        submit_tambah() {
+            this.form_tambah.post(route("master.user.store"), {
+                onSuccess: () => {
+                    document.getElementById("tambah")?.click();
+                    this.form_tambah.reset()
+                },
+            });
+        },
     },
 };
 </script>
@@ -24,7 +56,7 @@ export default {
 <template>
     <div class="w-full flex flex-col gap-4">
         <div class="flex justify-between">
-            <label for="test" class="btn bg-success btn-xs">
+            <label for="tambah" class="btn bg-success btn-xs">
                 <i class="fa fa-plus"></i>
                 Tambah
             </label>
@@ -66,13 +98,17 @@ export default {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(item, index) in 5" :key="index">
-                        <th>1</th>
-                        <td>Cy Ganderton</td>
-                        <td>Quality Control Specialist</td>
-                        <td>Littel, Schaden and Vandervort</td>
-                        <td>Canada</td>
-                        <td>12/16/2020</td>
+                    <tr
+                        v-for="(item, index) in user"
+                        :key="item.id"
+                        v-if="user.length"
+                    >
+                        <th>{{ index + 1 }}</th>
+                        <td class="capitalize">{{item.nama}}</td>
+                        <td>{{item.username}}</td>
+                        <td class="capitalize font-bold">{{item.status}}</td>
+                        <td class="capitalize">{{item.alamat}}</td>
+                        <td>{{item.no_hp}}</td>
                         <td class="flex justify-center items-center gap-2">
                             <label class="btn btn-xs bg-warning">
                                 <i class="fa fa-pen"></i>
@@ -84,10 +120,15 @@ export default {
                             </label>
                         </td>
                     </tr>
+                    <tr v-else>
+                        <td colspan="7" class="text-center font-bold">
+                            Belum ada data!
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
-        <div class="flex justify-center items-center">
+        <div class="flex justify-center items-center" v-if="user.length">
             <div class="join">
                 <button class="join-item btn btn-xs">1</button>
                 <button class="join-item btn btn-xs bg-active">2</button>
@@ -97,19 +138,74 @@ export default {
         </div>
     </div>
 
-    <Modal_normal id="test" title="Tambah User">
+    <Modal_normal id="tambah" title="Tambah User">
         <div class="grid grid-cols-2 gap-4">
-            <Input_normal title="Nama" placeholder="Masukkan Nama" />
-            <Input_normal title="Username" placeholder="Masukkan Username" />
+            <Input_normal
+                v-model="form_tambah.nama"
+                :error="form_tambah.errors.nama"
+                :length="100"
+                title="Nama"
+                placeholder="Masukkan Nama"
+            />
+            <Input_normal
+                v-model="form_tambah.username"
+                :error="form_tambah.errors.username"
+                :length="100"
+                title="Username"
+                placeholder="Masukkan Username"
+            />
         </div>
         <div class="grid grid-cols-2 gap-4">
-            <Input_normal title="Nomor Handphone" placeholder="Masukkan Nomor Handphone" />
-            <Select_normal title="Status" placeholder="Masukkan Status" />
+            <Input_normal
+                v-model="form_tambah.no_hp"
+                :error="form_tambah.errors.no_hp"
+                :length="15"
+                autocomplete="off"
+                title="Nomor Handphone"
+                placeholder="Masukkan Nomor Handphone"
+            />
+            <Select_normal
+                v-model="form_tambah.role_id"
+                :key="form_tambah.role_id"
+                :error="form_tambah.errors.role_id"
+                label="nama"
+                get="id"
+                :data="role"
+                title="Status"
+                placeholder="Pilih Status"
+            />
         </div>
-        <Textarea_normal title="Alamat" placeholder="Masukkan Alamat" />
+        <Textarea_normal
+            v-model="form_tambah.alamat"
+            :error="form_tambah.errors.alamat"
+            :length="100"
+            title="Alamat"
+            placeholder="Masukkan Alamat"
+        />
+        <div class="grid grid-cols-2 gap-4">
+            <Input_password
+                v-model="form_tambah.password"
+                :error="form_tambah.errors.password"
+                :length="100"
+                title="Password"
+                placeholder="Masukkan Nama"
+            />
+            <Input_password
+                v-model="form_tambah.password_confirmation"
+                :length="100"
+                title="Konfirmasi Password"
+                placeholder="Masukkan Username"
+            />
+        </div>
 
         <template v-slot:action>
-            <button class="btn bg-success">simpan</button>
+            <button
+                class="btn bg-success"
+                :class="{ 'loading btn-disabled': form_tambah.processing }"
+                @click="submit_tambah"
+            >
+                simpan
+            </button>
         </template>
     </Modal_normal>
 </template>
