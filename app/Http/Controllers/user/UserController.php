@@ -20,11 +20,7 @@ class UserController extends Controller
     {
         $role = Role::all();
 
-        $user = User::with('role')->get();
-        $user = $user->map(function($q){
-            $q['status'] = $q->role['nama'];
-            return $q;
-        });
+        $user = User::with('role')->paginate(5)->withQueryString();
 
         $data = [
             'role' => $role,

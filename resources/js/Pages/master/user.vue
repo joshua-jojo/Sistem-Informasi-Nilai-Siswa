@@ -7,6 +7,8 @@ import Modal_normal from "../../component/modal/modal_normal.vue";
 import menu_layout from "../../layout/menu_layout.vue";
 import { useStore } from "vuex";
 import { useForm } from "@inertiajs/vue3";
+import { router } from '@inertiajs/vue3'
+
 export default {
     layout: menu_layout,
     props: {
@@ -45,10 +47,13 @@ export default {
             this.form_tambah.post(route("master.user.store"), {
                 onSuccess: () => {
                     document.getElementById("tambah")?.click();
-                    this.form_tambah.reset()
+                    this.form_tambah.reset();
                 },
             });
         },
+        goPage(data){
+            router.get(data)
+        }
     },
 };
 </script>
@@ -99,16 +104,16 @@ export default {
                 </thead>
                 <tbody>
                     <tr
-                        v-for="(item, index) in user"
+                        v-for="(item, index) in user.data"
                         :key="item.id"
-                        v-if="user.length"
+                        v-if="user.data.length"
                     >
                         <th>{{ index + 1 }}</th>
-                        <td class="capitalize">{{item.nama}}</td>
-                        <td>{{item.username}}</td>
-                        <td class="capitalize font-bold">{{item.status}}</td>
-                        <td class="capitalize">{{item.alamat}}</td>
-                        <td>{{item.no_hp}}</td>
+                        <td class="capitalize">{{ item.nama }}</td>
+                        <td>{{ item.username }}</td>
+                        <td class="capitalize font-bold">{{ item.status }}</td>
+                        <td class="capitalize">{{ item.alamat }}</td>
+                        <td>{{ item.no_hp }}</td>
                         <td class="flex justify-center items-center gap-2">
                             <label class="btn btn-xs bg-warning">
                                 <i class="fa fa-pen"></i>
@@ -128,12 +133,18 @@ export default {
                 </tbody>
             </table>
         </div>
-        <div class="flex justify-center items-center" v-if="user.length">
+        <div class="flex justify-center items-center" v-if="user.data.length">
             <div class="join">
-                <button class="join-item btn btn-xs">1</button>
-                <button class="join-item btn btn-xs bg-active">2</button>
-                <button class="join-item btn btn-xs">3</button>
-                <button class="join-item btn btn-xs">4</button>
+                <button
+                    class="join-item btn btn-xs"
+                    :class="{'bg-active' : item.active}"
+                    v-for="(item, index) in user.links"
+                    :key="index"
+                    v-html="item.label"
+                    :disabled="!item.url"
+                    @click="goPage(item.url)"
+                >
+                </button>
             </div>
         </div>
     </div>
