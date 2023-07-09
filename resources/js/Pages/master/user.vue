@@ -11,10 +11,7 @@ import { router } from '@inertiajs/vue3'
 
 export default {
     layout: menu_layout,
-    props: {
-        role: Array,
-        user: Array,
-    },
+    props: ['role','user'],
     components: {
         Modal_normal,
         Input_normal,
@@ -35,11 +32,17 @@ export default {
             role_id: null,
         });
 
+        const form_hapus = useForm({
+            id : null,
+            nama : null,
+        })
+
         store.state.page.bagian = "Master";
         store.state.page.judul = "User";
 
         return {
             form_tambah,
+            form_hapus,
         };
     },
     methods: {
@@ -53,7 +56,22 @@ export default {
         },
         goPage(data){
             router.get(data)
-        }
+        },
+        get_hapus_data(item){
+            this.form_hapus.id = item.id
+            this.form_hapus.nama = item.nama
+            console.log(item);
+        },
+        hapus_user(){
+            this.form_hapus.delete(route("master.user.destroy",{
+                user : this.form_hapus.id
+            }),{
+                onSuccess: () => {
+                    document.getElementById("hapus")?.click();
+                    this.form_hapus.reset();
+                },
+            })
+        },
     },
 };
 </script>
@@ -119,7 +137,7 @@ export default {
                                 <i class="fa fa-pen"></i>
                                 edit
                             </label>
-                            <label class="btn btn-xs bg-danger">
+                            <label class="btn btn-xs bg-danger" for="hapus"  @click="get_hapus_data(item)">
                                 <i class="fa fa-trash"></i>
                                 hapus
                             </label>
@@ -217,6 +235,13 @@ export default {
             >
                 simpan
             </button>
+        </template>
+    </Modal_normal>
+
+    <Modal_normal id="hapus" :title="'Hapus Pengguna ' + form_hapus.nama" >
+        Perhatian untuk menghapus pengguna <b>{{ form_hapus.nama }}</b>. Semua data yang terkait akan di hapus dari sistem. Tetap lanjutkan?
+        <template v-slot:action>
+            <button class="btn bg-danger" :class="{'loading btn-disabled' : form_hapus.processing}" @click="hapus_user">Lanjutkan</button>
         </template>
     </Modal_normal>
 </template>

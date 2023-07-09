@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\user;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\user\DeleteUserRequest;
 use App\Http\Requests\user\StoreUserRequest;
 use App\Models\Role;
 use App\Models\User;
@@ -97,8 +98,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(DeleteUserRequest $id)
     {
-        //
+        $user = User::find($id)->first();
+        $user->delete();
     }
 }
