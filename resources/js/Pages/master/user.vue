@@ -8,6 +8,7 @@ import menu_layout from "../../layout/menu_layout.vue";
 import { useStore } from "vuex";
 import { useForm } from "@inertiajs/vue3";
 import { router } from "@inertiajs/vue3";
+import { Link } from '@inertiajs/vue3'
 
 export default {
     layout: menu_layout,
@@ -18,6 +19,7 @@ export default {
         Textarea_normal,
         Select_normal,
         Input_password,
+        Link
     },
     setup() {
         const store = useStore();
@@ -45,6 +47,20 @@ export default {
             form_hapus,
         };
     },
+    data(){
+        return {
+            show : 5,
+            cari : "",
+        }
+    },
+    watch : {
+        "show"(){
+            this.get_data()
+        },
+        "cari"(){
+            this.get_data()
+        },
+    },
     methods: {
         submit_tambah() {
             this.form_tambah.post(route("master.user.store"), {
@@ -54,13 +70,13 @@ export default {
                 },
             });
         },
-        goPage(data) {
+        get_data(){
             const params = {
-                search: null,
+                search: this.cari,
+                show : this.show,
             };
-            router.get(data, params, {
+            router.get(route("master.user.index"), params, {
                 preserveState: true,
-                only: ["user"],
             });
         },
         get_hapus_data(item) {
@@ -93,25 +109,17 @@ export default {
                 Tambah
             </label>
             <div class="flex gap-4">
-                <div class="join">
-                    <div>
-                        <div>
-                            <input
-                                class="input input-bordered input-xs join-item"
-                                placeholder="Search..."
-                            />
-                        </div>
-                    </div>
-                    <div class="indicator">
-                        <button class="btn btn-xs join-item">Search</button>
-                    </div>
-                </div>
+                <input
+                    class="input input-bordered input-xs join-item"
+                    placeholder="Search..."
+                    v-model="cari"
+                />
                 <div class="flex gap-2 justify-center items-center">
                     <div class="text-sm">Tampilkan :</div>
-                    <select class="select select-xs select-bordered">
-                        <option value="5">5 baris</option>
-                        <option value="10">10 baris</option>
-                        <option value="20">20 baris</option>
+                    <select class="select select-xs select-bordered" v-model="show">
+                        <option :value="5">5 baris</option>
+                        <option :value="10">10 baris</option>
+                        <option :value="20">20 baris</option>
                     </select>
                 </div>
             </div>
@@ -170,15 +178,16 @@ export default {
         </div>
         <div class="flex justify-center items-center" v-if="user.data.length">
             <div class="join">
-                <button
+                <Link as="button"
                     class="join-item btn btn-xs"
                     :class="{ 'bg-active': item.active }"
                     v-for="(item, index) in user.links"
                     :key="index"
                     v-html="item.label"
                     :disabled="!item.url"
-                    @click="goPage(item.url)"
-                ></button>
+                    :href="item.url? item.url : '#'"
+                    :preserve-state="true"
+                ></Link>
             </div>
         </div>
     </div>
