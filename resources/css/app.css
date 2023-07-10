@@ -5,12 +5,37 @@
 .bg-success {
     @apply bg-green-200
 }
+
 .bg-warning {
     @apply bg-yellow-100
 }
+
 .bg-danger {
     @apply bg-red-300
 }
+
 .bg-active {
     @apply bg-sky-400
+}
+
+.table-leave-from {
+    opacity: 1
+}
+
+.table-leave-to {
+    opacity: 0
+}
+
+.table-leave-active {
+    animation: fade-out .4s ease-out both
+}
+
+@keyframes fade-out {
+    0% {
+        opacity: 1
+    }
+
+    100% {
+        opacity: 0
+    }
 }

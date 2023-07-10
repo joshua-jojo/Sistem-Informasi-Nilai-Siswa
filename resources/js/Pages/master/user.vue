@@ -7,11 +7,11 @@ import Modal_normal from "../../component/modal/modal_normal.vue";
 import menu_layout from "../../layout/menu_layout.vue";
 import { useStore } from "vuex";
 import { useForm } from "@inertiajs/vue3";
-import { router } from '@inertiajs/vue3'
+import { router } from "@inertiajs/vue3";
 
 export default {
     layout: menu_layout,
-    props: ['role','user'],
+    props: ["role", "user"],
     components: {
         Modal_normal,
         Input_normal,
@@ -33,9 +33,9 @@ export default {
         });
 
         const form_hapus = useForm({
-            id : null,
-            nama : null,
-        })
+            id: null,
+            nama: null,
+        });
 
         store.state.page.bagian = "Master";
         store.state.page.judul = "User";
@@ -54,29 +54,32 @@ export default {
                 },
             });
         },
-        goPage(data){
+        goPage(data) {
             const params = {
-                search : null
-            }
-            router.get(data,params,{
-                preserveState : true,
-                only : ['user']
-            })
+                search: null,
+            };
+            router.get(data, params, {
+                preserveState: true,
+                only: ["user"],
+            });
         },
-        get_hapus_data(item){
-            this.form_hapus.id = item.id
-            this.form_hapus.nama = item.nama
+        get_hapus_data(item) {
+            this.form_hapus.id = item.id;
+            this.form_hapus.nama = item.nama;
             console.log(item);
         },
-        hapus_user(){
-            this.form_hapus.delete(route("master.user.destroy",{
-                user : this.form_hapus.id
-            }),{
-                onSuccess: () => {
-                    document.getElementById("hapus")?.click();
-                    this.form_hapus.reset();
-                },
-            })
+        hapus_user() {
+            this.form_hapus.delete(
+                route("master.user.destroy", {
+                    user: this.form_hapus.id,
+                }),
+                {
+                    onSuccess: () => {
+                        document.getElementById("hapus")?.click();
+                        this.form_hapus.reset();
+                    },
+                }
+            );
         },
     },
 };
@@ -127,33 +130,41 @@ export default {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr
-                        v-for="(item, index) in user.data"
-                        :key="item.id"
-                        v-if="user.data.length"
-                    >
-                        <th>{{ index + 1 }}</th>
-                        <td class="capitalize">{{ item.nama }}</td>
-                        <td>{{ item.username }}</td>
-                        <td class="capitalize font-bold">{{ item.status }}</td>
-                        <td class="capitalize">{{ item.alamat }}</td>
-                        <td>{{ item.no_hp }}</td>
-                        <td class="flex justify-center items-center gap-2">
-                            <label class="btn btn-xs bg-warning">
-                                <i class="fa fa-pen"></i>
-                                edit
-                            </label>
-                            <label class="btn btn-xs bg-danger" for="hapus"  @click="get_hapus_data(item)">
-                                <i class="fa fa-trash"></i>
-                                hapus
-                            </label>
-                        </td>
-                    </tr>
-                    <tr v-else>
-                        <td colspan="7" class="text-center font-bold">
-                            Belum ada data!
-                        </td>
-                    </tr>
+                    <transition-group name="table">
+                        <tr
+                            v-for="(item, index) in user.data"
+                            :key="item.id"
+                            v-if="user.data.length"
+                        >
+                            <th>{{ index + 1 }}</th>
+                            <td class="capitalize">{{ item.nama }}</td>
+                            <td>{{ item.username }}</td>
+                            <td class="capitalize font-bold">
+                                {{ item.status }}
+                            </td>
+                            <td class="capitalize">{{ item.alamat }}</td>
+                            <td>{{ item.no_hp }}</td>
+                            <td class="flex justify-center items-center gap-2">
+                                <label class="btn btn-xs bg-warning">
+                                    <i class="fa fa-pen"></i>
+                                    edit
+                                </label>
+                                <label
+                                    class="btn btn-xs bg-danger"
+                                    for="hapus"
+                                    @click="get_hapus_data(item)"
+                                >
+                                    <i class="fa fa-trash"></i>
+                                    hapus
+                                </label>
+                            </td>
+                        </tr>
+                        <tr v-else>
+                            <td colspan="7" class="text-center font-bold">
+                                Belum ada data!
+                            </td>
+                        </tr>
+                    </transition-group>
                 </tbody>
             </table>
         </div>
@@ -161,14 +172,13 @@ export default {
             <div class="join">
                 <button
                     class="join-item btn btn-xs"
-                    :class="{'bg-active' : item.active}"
+                    :class="{ 'bg-active': item.active }"
                     v-for="(item, index) in user.links"
                     :key="index"
                     v-html="item.label"
                     :disabled="!item.url"
                     @click="goPage(item.url)"
-                >
-                </button>
+                ></button>
             </div>
         </div>
     </div>
@@ -244,10 +254,17 @@ export default {
         </template>
     </Modal_normal>
 
-    <Modal_normal id="hapus" :title="'Hapus Pengguna ' + form_hapus.nama" >
-        Perhatian untuk menghapus pengguna <b>{{ form_hapus.nama }}</b>. Semua data yang terkait akan di hapus dari sistem. Tetap lanjutkan?
+    <Modal_normal id="hapus" :title="'Hapus Pengguna ' + form_hapus.nama">
+        Perhatian untuk menghapus pengguna <b>{{ form_hapus.nama }}</b
+        >. Semua data yang terkait akan di hapus dari sistem. Tetap lanjutkan?
         <template v-slot:action>
-            <button class="btn bg-danger" :class="{'loading btn-disabled' : form_hapus.processing}" @click="hapus_user">Lanjutkan</button>
+            <button
+                class="btn bg-danger"
+                :class="{ 'loading btn-disabled': form_hapus.processing }"
+                @click="hapus_user"
+            >
+                Lanjutkan
+            </button>
         </template>
     </Modal_normal>
 </template>
