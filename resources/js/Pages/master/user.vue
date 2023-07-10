@@ -86,7 +86,7 @@ export default {
 </script>
 
 <template>
-    <div class="w-full flex flex-col gap-4">
+    <div class="w-full flex flex-col gap-4 scrollbar-hide">
         <div class="flex justify-between">
             <label for="tambah" class="btn bg-success btn-xs">
                 <i class="fa fa-plus"></i>
@@ -116,7 +116,7 @@ export default {
                 </div>
             </div>
         </div>
-        <div class="overflow-x-auto w-full">
+        <div class="overflow-x-auto w-full scrollbar-hide">
             <table class="table table-xs w-full table-zebra">
                 <thead class="bg-sky-200">
                     <tr>

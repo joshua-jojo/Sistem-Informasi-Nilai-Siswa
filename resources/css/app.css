@@ -18,24 +18,31 @@
     @apply bg-sky-400
 }
 
-.table-leave-from {
+.table-leave-from,.table-enter-to {
+    transform: translateX(0);
     opacity: 1
 }
 
-.table-leave-to {
+.table-leave-to,.table-enter-from {
+    transform: translateX(50px);
     opacity: 0
 }
 
 .table-leave-active {
-    animation: fade-out .4s ease-out both
+    animation: fade-out-right .4s cubic-bezier(.25, .46, .45, .94) both
+}
+.table-enter-active {
+    animation: fade-out-right .4s cubic-bezier(.25, .46, .45, .94) both reverse
 }
 
-@keyframes fade-out {
+@keyframes fade-out-right {
     0% {
+        transform: translateX(0);
         opacity: 1
     }
 
     100% {
+        transform: translateX(50px);
         opacity: 0
     }
 }

@@ -189,8 +189,8 @@ export default {
                         </ul>
                     </div>
                 </div>
-                <div class="overflow-x-auto w-full card shadow-lg mt-4">
-                    <div class="w-full card-body">
+                <div class="overflow-x-auto w-full card shadow-lg mt-4 scrollbar-hide">
+                    <div class="w-full card-body scrollbar-hide">
                         <slot></slot>
                     </div>
                 </div>
