@@ -8,22 +8,34 @@ import menu_layout from "../../layout/menu_layout.vue";
 import { useStore } from "vuex";
 import { useForm } from "@inertiajs/vue3";
 import { router } from "@inertiajs/vue3";
-import { Link } from '@inertiajs/vue3'
+import { Link } from "@inertiajs/vue3";
 
 export default {
     layout: menu_layout,
-    props: ["role", "user"],
+    props: ["role", "user", "params"],
     components: {
         Modal_normal,
         Input_normal,
         Textarea_normal,
         Select_normal,
         Input_password,
-        Link
+        Link,
     },
     setup() {
         const store = useStore();
         const form_tambah = useForm({
+            nama: "",
+            username: "",
+            password: "",
+            password_confirmation: "",
+            no_hp: "",
+            status: "",
+            alamat: "",
+            role_id: null,
+        });
+
+        const form_edit = useForm({
+            id: null,
             nama: "",
             username: "",
             password: "",
@@ -44,21 +56,22 @@ export default {
 
         return {
             form_tambah,
+            form_edit,
             form_hapus,
         };
     },
-    data(){
+    data() {
         return {
-            show : 5,
-            cari : "",
-        }
+            show: this.params.show,
+            cari: this.params.search,
+        };
     },
-    watch : {
-        "show"(){
-            this.get_data()
+    watch: {
+        show() {
+            this.get_data();
         },
-        "cari"(){
-            this.get_data()
+        cari() {
+            this.get_data();
         },
     },
     methods: {
@@ -70,10 +83,18 @@ export default {
                 },
             });
         },
-        get_data(){
+        submit_edit() {
+            this.form_edit.put(route("master.user.update",{id : this.form_edit.id}), {
+                onSuccess: () => {
+                    document.getElementById("edit")?.click();
+                    this.form_edit.reset();
+                },
+            });
+        },
+        get_data() {
             const params = {
                 search: this.cari,
-                show : this.show,
+                show: this.show,
             };
             router.get(route("master.user.index"), params, {
                 preserveState: true,
@@ -82,7 +103,15 @@ export default {
         get_hapus_data(item) {
             this.form_hapus.id = item.id;
             this.form_hapus.nama = item.nama;
-            console.log(item);
+        },
+        get_edit_data(item) {
+            this.form_edit.id = item.id;
+            this.form_edit.nama = item.nama;
+            this.form_edit.username = item.username;
+            this.form_edit.no_hp = item.no_hp;
+            this.form_edit.status = item.status;
+            this.form_edit.alamat = item.alamat;
+            this.form_edit.role_id = item.role_id;
         },
         hapus_user() {
             this.form_hapus.delete(
@@ -116,7 +145,10 @@ export default {
                 />
                 <div class="flex gap-2 justify-center items-center">
                     <div class="text-sm">Tampilkan :</div>
-                    <select class="select select-xs select-bordered" v-model="show">
+                    <select
+                        class="select select-xs select-bordered"
+                        v-model="show"
+                    >
                         <option :value="5">5 baris</option>
                         <option :value="10">10 baris</option>
                         <option :value="20">20 baris</option>
@@ -148,12 +180,16 @@ export default {
                             <td class="capitalize">{{ item.nama }}</td>
                             <td>{{ item.username }}</td>
                             <td class="capitalize font-bold">
-                                {{ item.status }}
+                                {{ item?.role?.nama }}
                             </td>
                             <td class="capitalize">{{ item.alamat }}</td>
                             <td>{{ item.no_hp }}</td>
                             <td class="flex justify-center items-center gap-2">
-                                <label class="btn btn-xs bg-warning">
+                                <label
+                                    class="btn btn-xs bg-warning"
+                                    for="edit"
+                                    @click="get_edit_data(item)"
+                                >
                                     <i class="fa fa-pen"></i>
                                     edit
                                 </label>
@@ -178,14 +214,15 @@ export default {
         </div>
         <div class="flex justify-center items-center" v-if="user.data.length">
             <div class="join">
-                <Link as="button"
+                <Link
+                    as="button"
                     class="join-item btn btn-xs"
                     :class="{ 'bg-active': item.active }"
                     v-for="(item, index) in user.links"
                     :key="index"
                     v-html="item.label"
                     :disabled="!item.url"
-                    :href="item.url? item.url : '#'"
+                    :href="item.url ? item.url : '#'"
                     :preserve-state="true"
                 ></Link>
             </div>
@@ -261,6 +298,80 @@ export default {
                 simpan
             </button>
         </template>
+    </Modal_normal>
+
+    <Modal_normal id="edit" title="Edit User">
+        <div class="grid grid-cols-2 gap-4">
+            <Input_normal
+                v-model="form_edit.nama"
+                :error="form_edit.errors.nama"
+                :length="100"
+                title="Nama"
+                placeholder="Masukkan Nama"
+            />
+            <Input_normal
+                v-model="form_edit.username"
+                :error="form_edit.errors.username"
+                :length="100"
+                title="Username"
+                placeholder="Masukkan Username"
+            />
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+            <Input_normal
+                v-model="form_edit.no_hp"
+                :error="form_edit.errors.no_hp"
+                :length="15"
+                autocomplete="off"
+                title="Nomor Handphone"
+                placeholder="Masukkan Nomor Handphone"
+            />
+            <Select_normal
+                v-model="form_edit.role_id"
+                :key="form_edit.role_id"
+                :error="form_edit.errors.role_id"
+                label="nama"
+                get="id"
+                :data="role"
+                title="Status"
+                placeholder="Pilih Status"
+            />
+        </div>
+        <Textarea_normal
+            v-model="form_edit.alamat"
+            :error="form_edit.errors.alamat"
+            :length="100"
+            title="Alamat"
+            placeholder="Masukkan Alamat"
+        />
+        <div class="grid grid-cols-2 gap-4">
+            <Input_password
+                v-model="form_edit.password"
+                :error="form_edit.errors.password"
+                :length="100"
+                title="Password"
+                placeholder="Masukkan Nama"
+            />
+            <Input_password
+                v-model="form_edit.password_confirmation"
+                :length="100"
+                title="Konfirmasi Password"
+                placeholder="Masukkan Username"
+            />
+        </div>
+
+        <template v-slot:action>
+            <button
+                class="btn bg-success"
+                :class="{ 'loading btn-disabled': form_edit.processing }"
+                @click="submit_edit"
+            >
+                simpan
+            </button>
+        </template>
+        <div class="mt-4 text-xs">
+            * <i>Abaikan Password jika tidak ingin merubah kata sandi.</i>
+        </div>
     </Modal_normal>
 
     <Modal_normal id="hapus" :title="'Hapus Pengguna ' + form_hapus.nama">

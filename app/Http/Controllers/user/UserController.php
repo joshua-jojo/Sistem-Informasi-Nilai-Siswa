@@ -5,10 +5,10 @@ namespace App\Http\Controllers\user;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\user\DeleteUserRequest;
 use App\Http\Requests\user\StoreUserRequest;
+use App\Http\Requests\user\UpdateUserRequest;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -17,15 +17,31 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $params = [
+            'search' => $request->search ? $request->search : '',
+            'show' => $request->show ? $request->show : 5,
+        ];
+
         $role = Role::all();
 
-        $user = User::with('role')->paginate(5)->withQueryString();
+        $user = User::with('role');
+        $user = $user->where(function($q) use($params){
+            $q->where("nama","like","%{$params['search']}%");
+            $q->orWhere("username","like","%{$params['search']}%");
+            $q->orWhere("alamat","like","%{$params['search']}%");
+            $q->orWhere("no_hp","like","%{$params['search']}%");
+            $q->orWhereHas("role",function($role) use($params){
+                $role->where("nama","like","%{$params['search']}%");
+            });
+        });
+        $user = $user->latest()->paginate($params['show'])->withQueryString();
 
         $data = [
             'role' => $role,
             'user' => $user,
+            'params' => $params
         ];
         return inertia()->render('master/user',$data);
     }
@@ -87,9 +103,18 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateUserRequest $request, $id)
     {
-        //
+        $user = User::find($id);
+        $user->nama = $request->nama;
+        $user->alamat = $request->alamat;
+        $user->no_hp = $request->no_hp;
+        $user->username = $request->username;
+        $user->role_id = $request->role_id;
+        if(!empty($request->password)){
+            $user->password = bcrypt($request->password);
+        }
+        $user->save();
     }
 
     /**
