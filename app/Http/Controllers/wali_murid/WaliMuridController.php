@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\wali_murid;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class WaliMuridController extends Controller
@@ -12,9 +13,27 @@ class WaliMuridController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return inertia()->render('master/wali_murid');
+        $params = [
+            'cari' => !empty($request->cari) ? $request->cari : '',
+            'show' => !empty($request->show) ? $request->show : 5,
+        ];
+        $user = User::whereHas("role", function ($q) {
+            $q->where("nama", "wali murid");
+        });
+        $user = $user->where(function ($q) use ($params) {
+            $q->where("nama","like","%{$params['cari']}%");
+            $q->orWhere("alamat","like","%{$params['cari']}%");
+            $q->orWhere("no_hp","like","%{$params['cari']}%");
+        });
+        $user = $user->paginate($params['show'])->withQueryString();
+
+        $data = [
+            'user' => $user,
+            'params' => $params,
+        ];
+        return inertia()->render('master/wali_murid', $data);
     }
 
     /**
