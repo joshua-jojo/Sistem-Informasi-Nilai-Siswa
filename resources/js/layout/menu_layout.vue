@@ -82,8 +82,8 @@ export default {
                                 <span class="badge">New</span>
                             </a>
                         </li>
-                        <li><a>Settings</a></li>
-                        <li><a>Logout</a></li>
+                        <li><a :class="{'bg-active' : store.state.page.judul == ''}">Settings</a></li>
+                        <li><a :class="{'bg-active' : store.state.page.judul == ''}">Logout</a></li>
                     </ul>
                 </div>
             </div>
@@ -97,7 +97,7 @@ export default {
                     <li
                         class="text-[20px] h-[40px] dropdown dropdown-right dropdown-hover"
                     >
-                        <label tabindex="0" class="">
+                        <label tabindex="0" :class="{'bg-active' : store.state.page.bagian == 'Dashboard'}">
                             <i class="fa fa-home"></i>
                         </label>
                         <ul
@@ -105,13 +105,13 @@ export default {
                             class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
                         >
                             <li class="menu-title">Dashboard</li>
-                            <li @click="dashboard"><a>Dashboard</a></li>
+                            <li @click="dashboard"><a :class="{'bg-active' : store.state.page.judul == 'Halaman Utama'}">Dashboard</a></li>
                         </ul>
                     </li>
                     <li
                         class="text-[20px] h-[40px] dropdown dropdown-right dropdown-hover"
                     >
-                        <label tabindex="0" class="">
+                        <label tabindex="0" :class="{'bg-active' : store.state.page.bagian == 'Laporan'}">
                             <i class="fa-solid fa-rectangle-list"></i>
                         </label>
                         <ul
@@ -120,16 +120,16 @@ export default {
                         >
                             <li class="menu-title">Laporan</li>
                             <li @click="nilai_akademik">
-                                <a>Nilai Akademik</a>
+                                <a :class="{'bg-active' : store.state.page.judul == 'Nilai Akademik'}">Nilai Akademik</a>
                             </li>
-                            <li @click="rapor"><a>Rapor</a></li>
-                            <li @click="absensi"><a>Absensi</a></li>
+                            <li @click="rapor"><a :class="{'bg-active' : store.state.page.judul == 'Rapor'}">Rapor</a></li>
+                            <li @click="absensi"><a :class="{'bg-active' : store.state.page.judul == 'Absensi'}">Absensi</a></li>
                         </ul>
                     </li>
                     <li
                         class="text-[20px] h-[40px] dropdown dropdown-right dropdown-hover"
                     >
-                        <label tabindex="1" class="">
+                        <label tabindex="1" :class="{'bg-active' : store.state.page.bagian == 'Master'}">
                             <i class="fa-solid fa-folder"></i>
                         </label>
                         <ul
@@ -137,22 +137,22 @@ export default {
                             class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
                         >
                             <li class="menu-title">Master</li>
-                            <li @click="user"><a>User</a></li>
-                            <li @click="wali_murid"><a>Wali Murid</a></li>
-                            <li @click="siswa"><a>Siswa</a></li>
-                            <li @click="guru"><a>Guru</a></li>
-                            <li @click="jurusan"><a>Jurusan</a></li>
-                            <li @click="kelas"><a>Kelas</a></li>
+                            <li @click="user"><a :class="{'bg-active' : store.state.page.judul == 'User'}">User</a></li>
+                            <li @click="wali_murid"><a :class="{'bg-active' : store.state.page.judul == 'Wali Murid'}">Wali Murid</a></li>
+                            <li @click="siswa"><a :class="{'bg-active' : store.state.page.judul == 'Siswa'}">Siswa</a></li>
+                            <li @click="guru"><a :class="{'bg-active' : store.state.page.judul == 'Guru'}">Guru</a></li>
+                            <li @click="jurusan"><a :class="{'bg-active' : store.state.page.judul == 'Jurusan'}">Jurusan</a></li>
+                            <li @click="kelas"><a :class="{'bg-active' : store.state.page.judul == 'Kelas'}">Kelas</a></li>
                             <li @click="mata_pelajaran">
-                                <a>Mata Pelajaran</a>
+                                <a :class="{'bg-active' : store.state.page.judul == 'Mata Pelajaran'}">Mata Pelajaran</a>
                             </li>
-                            <li @click="ekskul"><a>Ekskul</a></li>
+                            <li @click="ekskul"><a :class="{'bg-active' : store.state.page.judul == 'Ekskul'}">Ekskul</a></li>
                         </ul>
                     </li>
                     <li
                         class="text-[20px] h-[40px] dropdown dropdown-right dropdown-hover"
                     >
-                        <label tabindex="1" class="">
+                        <label tabindex="1" :class="{'bg-active' : store.state.page.bagian == 'Pengaturan'}">
                             <i class="fa fa-gear"></i>
                         </label>
                         <ul
@@ -161,9 +161,9 @@ export default {
                         >
                             <li class="menu-title">Pengaturan</li>
                             <li @click="profil_sekolah">
-                                <a>Profil Sekolah</a>
+                                <a :class="{'bg-active' : store.state.page.judul == 'Profil Sekolah'}">Profil Sekolah</a>
                             </li>
-                            <li @click="profil_user"><a>Profil User</a></li>
+                            <li @click="profil_user"><a :class="{'bg-active' : store.state.page.judul == 'Profil User'}">Profil User</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -177,13 +177,13 @@ export default {
                                     v-if="store.state.page.bagian"
                                     :key="store.state.page.bagian"
                                 >
-                                    <a>{{ store.state.page.bagian }}</a>
+                                    <a :class="{'bg-active' : store.state.page.judul == ''}">{{ store.state.page.bagian }}</a>
                                 </li>
                                 <li
                                     v-if="store.state.page.judul"
                                     :key="store.state.page.judul"
                                 >
-                                    <a>{{ store.state.page.judul }}</a>
+                                    <a :class="{'bg-active' : store.state.page.judul == ''}">{{ store.state.page.judul }}</a>
                                 </li>
                             </transition-group>
                         </ul>

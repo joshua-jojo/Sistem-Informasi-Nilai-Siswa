@@ -55,7 +55,13 @@ export default {
             });
         },
         goPage(data){
-            router.get(data)
+            const params = {
+                search : null
+            }
+            router.get(data,params,{
+                preserveState : true,
+                only : ['user']
+            })
         },
         get_hapus_data(item){
             this.form_hapus.id = item.id
