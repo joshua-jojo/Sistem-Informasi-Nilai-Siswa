@@ -30,7 +30,7 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    return Inertia::render('welcome_page');
+    return redirect()->route("dashboard.index");
 })->name('welcome');
 
 Route::get('/enjoy', function () {
