@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\siswa;
+namespace App\Http\Controllers\murid;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class SiswaController extends Controller
+class MuridController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +14,7 @@ class SiswaController extends Controller
      */
     public function index()
     {
-        return inertia()->render('master/siswa');
+        return inertia()->render("master/murid");
     }
 
     /**

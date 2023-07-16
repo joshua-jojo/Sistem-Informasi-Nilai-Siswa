@@ -36,8 +36,8 @@ export default {
         mata_pelajaran() {
             router.get(route("master.mata-pelajaran.index"));
         },
-        siswa() {
-            router.get(route("master.siswa.index"));
+        murid() {
+            router.get(route("master.murid.index"));
         },
         user() {
             router.get(route("master.user.index"));
@@ -139,7 +139,7 @@ export default {
                             <li class="menu-title">Master</li>
                             <li @click="user"><a :class="{'bg-active' : store.state.page.judul == 'User'}">User</a></li>
                             <li @click="wali_murid"><a :class="{'bg-active' : store.state.page.judul == 'Wali Murid'}">Wali Murid</a></li>
-                            <li @click="siswa"><a :class="{'bg-active' : store.state.page.judul == 'Siswa'}">Siswa</a></li>
+                            <li @click="murid"><a :class="{'bg-active' : store.state.page.judul == 'Murid'}">Murid</a></li>
                             <li @click="guru"><a :class="{'bg-active' : store.state.page.judul == 'Guru'}">Guru</a></li>
                             <li @click="jurusan"><a :class="{'bg-active' : store.state.page.judul == 'Jurusan'}">Jurusan</a></li>
                             <li @click="kelas"><a :class="{'bg-active' : store.state.page.judul == 'Kelas'}">Kelas</a></li>

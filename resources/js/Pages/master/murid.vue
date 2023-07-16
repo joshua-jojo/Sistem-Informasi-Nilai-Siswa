@@ -6,7 +6,7 @@ export default {
     setup(){
         const store = useStore()
         store.state.page.bagian = "Master"
-        store.state.page.judul = "Siswa"
+        store.state.page.judul = "Murid"
     }
 }
 </script>
