@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\kelas\KelasDeleteRequest;
 use App\Http\Requests\kelas\KelasStoreRequest;
 use App\Http\Requests\kelas\KelasUpdateRequest;
+use App\Models\Jurusan;
 use App\Models\Kelas;
 use Illuminate\Http\Request;
 
@@ -23,13 +24,19 @@ class KelasController extends Controller
             'show' => !empty($request->show) ? $request->show : 5,
         ];
 
-        $kelas = Kelas::where(function($q) use($params){
+        $kelas = Kelas::with(["jurusan"])->where(function($q) use($params){
             $q->where("kelas","like","%{$params['cari']}%");
+            $q->orWhereHas("jurusan",function($jurusan) use ($params){
+                $jurusan->where("jurusan","like","%{$params['cari']}%");
+            });
         });
         $kelas = $kelas->latest();
         $kelas = $kelas->paginate($params['show'])->withQueryString();
+
+        $jurusan = Jurusan::all();
         $data = [
             "kelas" => $kelas,
+            "jurusan" => $jurusan,
             'params' => $params,
         ];
         return inertia()->render('master/kelas',$data);
@@ -55,6 +62,7 @@ class KelasController extends Controller
     {
         $kelas = new Kelas();
         $kelas->kelas = $request->kelas;
+        $kelas->jurusan_id = $request->jurusan_id;
         $kelas->save();
     }
 
@@ -90,7 +98,14 @@ class KelasController extends Controller
     public function update(KelasUpdateRequest $request, $id)
     {
         $kelas = Kelas::find($request->id);
+
+        if($kelas->kelas != $request->kelas){
+            $request->validate([
+                "kelas" => 'unique:kelas,kelas'
+            ]);
+        }
         $kelas->kelas = $request->kelas;
+        $kelas->jurusan_id = $request->jurusan_id;
         $kelas->save();
     }
 

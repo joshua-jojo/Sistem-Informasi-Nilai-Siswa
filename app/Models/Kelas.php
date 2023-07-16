@@ -9,4 +9,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Kelas extends Model
 {
     use HasFactory, SoftDeletes;
+
+    function jurusan()
+    {
+        return $this->belongsTo(Jurusan::class);
+    }
 }

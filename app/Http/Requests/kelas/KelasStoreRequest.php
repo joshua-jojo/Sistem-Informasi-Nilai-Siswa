@@ -24,7 +24,8 @@ class KelasStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            "kelas" => "required|unique:kelas,kelas"
+            "kelas" => "required|unique:kelas,kelas",
+            "jurusan_id" => "required|exists:jurusans,id",
         ];
     }
 }

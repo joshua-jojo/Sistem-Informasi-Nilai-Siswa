@@ -3,6 +3,7 @@ import { Link, router, useForm } from "@inertiajs/vue3";
 import menu_layout from "../../layout/menu_layout.vue";
 import modal_normal from "../../component/modal/modal_normal.vue";
 import input_normal from "../../component/input/input_normal.vue";
+import select_normal from "../../component/input/select_normal.vue";
 import { useStore } from "vuex";
 export default {
     layout: menu_layout,
@@ -10,6 +11,7 @@ export default {
         Link,
         modal_normal,
         input_normal,
+        select_normal,
     },
     setup() {
         const store = useStore();
@@ -18,9 +20,11 @@ export default {
 
         const form_tambah = useForm({
             kelas: "",
+            jurusan_id: null,
         });
         const form_edit = useForm({
             id: null,
+            jurusan_id: null,
             kelas: "",
         });
 
@@ -35,7 +39,7 @@ export default {
             form_hapus,
         };
     },
-    props: ["kelas", "params"],
+    props: ["kelas", "params", "jurusan"],
     data() {
         return {
             show: this.params.show,
@@ -63,6 +67,7 @@ export default {
         data_edit(data) {
             this.form_edit.id = data.id;
             this.form_edit.kelas = data.kelas;
+            this.form_edit.jurusan_id = data.jurusan_id;
         },
         submit_edit() {
             this.form_edit.put(
@@ -138,6 +143,7 @@ export default {
                     <tr class="bg-sky-200">
                         <th>NO.</th>
                         <th>Kelas</th>
+                        <th>Jurusan</th>
                         <th class="text-center">Opsi</th>
                     </tr>
                 </thead>
@@ -150,6 +156,9 @@ export default {
                         >
                             <td>{{ index + 1 }}</td>
                             <td>{{ item.kelas }}</td>
+                            <td class="uppercase">
+                                {{ item?.jurusan?.jurusan }}
+                            </td>
                             <td class="w-40">
                                 <div class="flex gap-2 w-full">
                                     <label
@@ -160,7 +169,7 @@ export default {
                                         <i class="fa fa-pen"></i> edit
                                     </label>
                                     <label
-                                    @click="data_hapus(item)"
+                                        @click="data_hapus(item)"
                                         for="hapus"
                                         class="btn btn-xs bg-error"
                                     >
@@ -170,7 +179,7 @@ export default {
                             </td>
                         </tr>
                         <tr v-else>
-                            <td colspan="3" class="text-center font-bold">
+                            <td colspan="10" class="text-center font-bold">
                                 Belum ada data!
                             </td>
                         </tr>
@@ -205,6 +214,16 @@ export default {
             placeholder="Masukkan nama kelas"
             :length="50"
         />
+        <select_normal
+            title="Jurusan"
+            placeholder="Pilih Jurusan"
+            v-model="form_tambah.jurusan_id"
+            :error="form_tambah.errors.jurusan_id"
+            :data="jurusan"
+            label="jurusan"
+            get="id"
+            uppercase
+        />
         <template v-slot:action>
             <button
                 class="btn bg-success"
@@ -225,6 +244,16 @@ export default {
             placeholder="Masukkan nama kelas"
             :length="50"
         />
+        <select_normal
+            title="Jurusan"
+            placeholder="Pilih Jurusan"
+            v-model="form_edit.jurusan_id"
+            :error="form_edit.errors.jurusan_id"
+            :data="jurusan"
+            label="jurusan"
+            get="id"
+            uppercase
+        />
         <template v-slot:action>
             <button
                 class="btn bg-warning"
@@ -238,7 +267,8 @@ export default {
 
     <!-- hapus  -->
     <modal_normal id="hapus" title="Hapus Kelas">
-        Lanjutkan untuk menghapus kelas <b>{{ form_hapus.kelas }}</b>. Semua data yang terkait akan di hapus.
+        Lanjutkan untuk menghapus kelas <b>{{ form_hapus.kelas }}</b
+        >. Semua data yang terkait akan di hapus.
         <template v-slot:action>
             <button
                 class="btn bg-error"

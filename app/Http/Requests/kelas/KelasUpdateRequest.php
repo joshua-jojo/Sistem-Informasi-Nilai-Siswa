@@ -25,7 +25,8 @@ class KelasUpdateRequest extends FormRequest
     {
         return [
             "id" => "required|exists:kelas,id",
-            "kelas" => "required|unique:kelas,kelas",
+            "kelas" => "required",
+            "jurusan_id" => "required|exists:jurusans,id",
         ];
     }
 }
