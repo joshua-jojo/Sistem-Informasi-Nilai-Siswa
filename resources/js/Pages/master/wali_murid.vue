@@ -3,11 +3,13 @@ import menu_layout from "../../layout/menu_layout.vue";
 import { useStore } from "vuex";
 import input_normal from "../../component/input/input_normal.vue";
 import { Link,router } from "@inertiajs/vue3";
+import modal_normal from "../../component/modal/modal_normal.vue"
 export default {
     layout: menu_layout,
     components: {
         input_normal,
-        Link
+        Link,
+        modal_normal
     },
     props: ["user",'params'],
     setup() {
@@ -134,4 +136,8 @@ export default {
             </div>
         </div>
     </div>
+    
+    <modal_normal id="edit" title="Edit Wali Murid">
+        
+    </modal_normal>
 </template>
