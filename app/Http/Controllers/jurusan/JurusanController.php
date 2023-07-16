@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\jurusan;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\jurusan\JurusanStoreRequest;
+use App\Models\Jurusan;
 use Illuminate\Http\Request;
 
 class JurusanController extends Controller
@@ -12,9 +14,24 @@ class JurusanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return inertia()->render('master/jurusan');
+        $params = [
+            'cari' => !empty($request->cari) ? $request->cari : '',
+            'show' => !empty($request->show) ? $request->show : 5,
+        ];
+
+        $kelas = Jurusan::where(function($q) use($params){
+            $q->where("jurusan","like","%{$params['cari']}%");
+        });
+        $kelas = $kelas->latest();
+        $kelas = $kelas->paginate($params['show'])->withQueryString();
+
+        $data = [
+            "jurusan" => $kelas,
+            'params' => $params,
+        ];
+        return inertia()->render('master/jurusan',$data);
     }
 
     /**
@@ -33,9 +50,11 @@ class JurusanController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(JurusanStoreRequest $request)
     {
-        //
+        $jurusan = new Jurusan();
+        $jurusan->jurusan = $request->jurusan;
+        $jurusan->save();
     }
 
     /**
