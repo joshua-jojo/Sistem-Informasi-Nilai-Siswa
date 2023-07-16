@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\kelas;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\kelas\KelasStoreRequest;
+use App\Models\Kelas;
 use Illuminate\Http\Request;
 
 class KelasController extends Controller
@@ -12,9 +14,23 @@ class KelasController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return inertia()->render('master/kelas');
+        $params = [
+            'cari' => !empty($request->cari) ? $request->cari : '',
+            'show' => !empty($request->show) ? $request->show : 5,
+        ];
+
+        $kelas = Kelas::where(function($q) use($params){
+            $q->where("kelas","like","%{$params['cari']}%");
+        });
+        $kelas = $kelas->latest();
+        $kelas = $kelas->paginate($params['show'])->withQueryString();
+        $data = [
+            "kelas" => $kelas,
+            'params' => $params,
+        ];
+        return inertia()->render('master/kelas',$data);
     }
 
     /**
@@ -33,9 +49,11 @@ class KelasController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(KelasStoreRequest $request)
     {
-        //
+        $kelas = new Kelas();
+        $kelas->kelas = $request->kelas;
+        $kelas->save();
     }
 
     /**

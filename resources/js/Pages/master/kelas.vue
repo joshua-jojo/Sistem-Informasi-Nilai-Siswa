@@ -1,19 +1,62 @@
 <script>
+import { Link,router,useForm } from "@inertiajs/vue3";
 import menu_layout from "../../layout/menu_layout.vue";
+import modal_normal from "../../component/modal/modal_normal.vue"
+import input_normal from "../../component/input/input_normal.vue"
 import { useStore } from "vuex";
 export default {
     layout: menu_layout,
+    components : {
+        Link,
+        modal_normal,
+        input_normal
+    },
     setup() {
         const store = useStore();
         store.state.page.bagian = "Master";
         store.state.page.judul = "Kelas";
+
+        const form_tambah = useForm({
+            kelas : "",
+        })
+        return {
+            form_tambah
+        }
     },
+    props: ["kelas","params"],
     data() {
         return {
-            cari: "",
-            show: 5,
+            show : this.params.show,
+            cari : this.params.cari
         };
     },
+    methods : {
+        get_data(){
+            const params = {
+                show : this.show,
+                cari : this.cari,
+            }
+            router.get(route("master.kelas.index"),params,{
+                preserveState : true
+            })
+        },
+        submit_tambah(){
+            this.form_tambah.post(route("master.kelas.store"),{
+                onSuccess : () => {
+                    document.getElementById("tambah")?.click()
+                    this.form_tambah.reset()
+                }
+            })
+        }
+    },
+    watch : {
+        show(){
+            this.get_data()
+        },
+        cari(){
+            this.get_data()
+        }
+    }
 };
 </script>
 
@@ -47,32 +90,75 @@ export default {
         </div>
 
         <!-- table  -->
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto scrollbar-hide">
             <table class="table table-xs table-zebra">
                 <thead>
-                    <tr>
+                    <tr class="bg-sky-200">
                         <th>NO.</th>
                         <th>Kelas</th>
                         <th class="text-center">Opsi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="bg-sky-200">
-                        <td>NO.</td>
-                        <td>Kelas</td>
-                        <td class="w-40">
-                            <div class="flex gap-2 w-full">
-                                <label for="edit" class="btn btn-xs bg-warning">
-                                    <i class="fa fa-pen"></i> edit
-                                </label>
-                                <label for="hapus" class="btn btn-xs bg-error">
-                                    <i class="fa fa-trash"></i> hapus
-                                </label>
-                            </div>
-                        </td>
-                    </tr>
+                    <transition-group name="table">
+                        <tr
+                            v-for="(item, index) in kelas?.data"
+                            :key="item?.id"
+                            v-if="kelas?.data?.length"
+                        >
+                            <td>{{ index + 1 }}</td>
+                            <td>{{ item.kelas }}</td>
+                            <td class="w-40">
+                                <div class="flex gap-2 w-full">
+                                    <label
+                                        for="edit"
+                                        class="btn btn-xs bg-warning"
+                                    >
+                                        <i class="fa fa-pen"></i> edit
+                                    </label>
+                                    <label
+                                        for="hapus"
+                                        class="btn btn-xs bg-error"
+                                    >
+                                        <i class="fa fa-trash"></i> hapus
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr v-else>
+                            <td colspan="3" class="text-center font-bold">
+                                Belum ada data!
+                            </td>
+                        </tr>
+                    </transition-group>
                 </tbody>
             </table>
         </div>
+
+        <div class="flex justify-center items-center" v-if="kelas.data.length">
+            <div class="join">
+                <Link
+                    as="button"
+                    class="join-item btn btn-xs"
+                    :class="{ 'bg-active': item.active }"
+                    v-for="(item, index) in kelas.links"
+                    :key="index"
+                    v-html="item.label"
+                    :disabled="!item.url"
+                    :href="item.url ? item.url : '#'"
+                    :preserve-state="true"
+                ></Link>
+            </div>
+        </div>
     </div>
+
+    <!-- tambah  -->
+    <modal_normal id="tambah" title="Tambah Kelas">
+        <input_normal title="Nama Kelas" :error="form_tambah?.errors.kelas" v-model="form_tambah.kelas" placeholder="Masukkan nama kelas" :length="50"/>
+        <template v-slot:action>
+            <button class="btn bg-success" :class="{'loading' : form_tambah.processing}" @click="submit_tambah">
+                simpan
+            </button>
+        </template>
+    </modal_normal>
 </template>
