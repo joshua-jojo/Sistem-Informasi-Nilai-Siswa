@@ -4,6 +4,7 @@ namespace App\Http\Controllers\kelas;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\kelas\KelasStoreRequest;
+use App\Http\Requests\kelas\KelasUpdateRequest;
 use App\Models\Kelas;
 use Illuminate\Http\Request;
 
@@ -85,9 +86,11 @@ class KelasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(KelasUpdateRequest $request, $id)
     {
-        //
+        $kelas = Kelas::find($request->id);
+        $kelas->kelas = $request->kelas;
+        $kelas->save();
     }
 
     /**
@@ -98,6 +101,6 @@ class KelasController extends Controller
      */
     public function destroy($id)
     {
-        //
+        dd($id);
     }
 }

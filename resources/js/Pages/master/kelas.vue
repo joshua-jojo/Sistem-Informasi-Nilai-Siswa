@@ -1,15 +1,15 @@
 <script>
-import { Link,router,useForm } from "@inertiajs/vue3";
+import { Link, router, useForm } from "@inertiajs/vue3";
 import menu_layout from "../../layout/menu_layout.vue";
-import modal_normal from "../../component/modal/modal_normal.vue"
-import input_normal from "../../component/input/input_normal.vue"
+import modal_normal from "../../component/modal/modal_normal.vue";
+import input_normal from "../../component/input/input_normal.vue";
 import { useStore } from "vuex";
 export default {
     layout: menu_layout,
-    components : {
+    components: {
         Link,
         modal_normal,
-        input_normal
+        input_normal,
     },
     setup() {
         const store = useStore();
@@ -17,46 +17,88 @@ export default {
         store.state.page.judul = "Kelas";
 
         const form_tambah = useForm({
-            kelas : "",
-        })
+            kelas: "",
+        });
+        const form_edit = useForm({
+            id: null,
+            kelas: "",
+        });
+
+        const form_hapus = useForm({
+            id: null,
+            kelas: "",
+        });
+
         return {
-            form_tambah
-        }
-    },
-    props: ["kelas","params"],
-    data() {
-        return {
-            show : this.params.show,
-            cari : this.params.cari
+            form_tambah,
+            form_edit,
+            form_hapus,
         };
     },
-    methods : {
-        get_data(){
-            const params = {
-                show : this.show,
-                cari : this.cari,
-            }
-            router.get(route("master.kelas.index"),params,{
-                preserveState : true
-            })
-        },
-        submit_tambah(){
-            this.form_tambah.post(route("master.kelas.store"),{
-                onSuccess : () => {
-                    document.getElementById("tambah")?.click()
-                    this.form_tambah.reset()
-                }
-            })
-        }
+    props: ["kelas", "params"],
+    data() {
+        return {
+            show: this.params.show,
+            cari: this.params.cari,
+        };
     },
-    watch : {
-        show(){
-            this.get_data()
+    methods: {
+        get_data() {
+            const params = {
+                show: this.show,
+                cari: this.cari,
+            };
+            router.get(route("master.kelas.index"), params, {
+                preserveState: true,
+            });
         },
-        cari(){
-            this.get_data()
-        }
-    }
+        submit_tambah() {
+            this.form_tambah.post(route("master.kelas.store"), {
+                onSuccess: () => {
+                    document.getElementById("tambah")?.click();
+                    this.form_tambah.reset();
+                },
+            });
+        },
+        data_edit(data) {
+            this.form_edit.id = data.id;
+            this.form_edit.kelas = data.kelas;
+        },
+        submit_edit() {
+            this.form_edit.put(
+                route("master.kelas.update", { id: this.form_edit.id }),
+                {
+                    onSuccess: () => {
+                        document.getElementById("edit")?.click();
+                        this.form_edit.reset();
+                    },
+                }
+            );
+        },
+        data_hapus(data) {
+            this.form_hapus.id = data.id;
+            this.form_hapus.kelas = data.kelas;
+        },
+        submit_hapus() {
+            this.form_hapus.delete(
+                route("master.kelas.destroy", { id: this.form_hapus.id }),
+                {
+                    onSuccess: () => {
+                        document.getElementById("hapus")?.click();
+                        this.form_hapus.reset();
+                    },
+                }
+            );
+        },
+    },
+    watch: {
+        show() {
+            this.get_data();
+        },
+        cari() {
+            this.get_data();
+        },
+    },
 };
 </script>
 
@@ -111,12 +153,14 @@ export default {
                             <td class="w-40">
                                 <div class="flex gap-2 w-full">
                                     <label
+                                        @click="data_edit(item)"
                                         for="edit"
                                         class="btn btn-xs bg-warning"
                                     >
                                         <i class="fa fa-pen"></i> edit
                                     </label>
                                     <label
+                                    @click="data_hapus(item)"
                                         for="hapus"
                                         class="btn btn-xs bg-error"
                                     >
@@ -154,10 +198,54 @@ export default {
 
     <!-- tambah  -->
     <modal_normal id="tambah" title="Tambah Kelas">
-        <input_normal title="Nama Kelas" :error="form_tambah?.errors.kelas" v-model="form_tambah.kelas" placeholder="Masukkan nama kelas" :length="50"/>
+        <input_normal
+            title="Nama Kelas"
+            :error="form_tambah?.errors.kelas"
+            v-model="form_tambah.kelas"
+            placeholder="Masukkan nama kelas"
+            :length="50"
+        />
         <template v-slot:action>
-            <button class="btn bg-success" :class="{'loading' : form_tambah.processing}" @click="submit_tambah">
+            <button
+                class="btn bg-success"
+                :class="{ 'loading btn-disabled': form_tambah.processing }"
+                @click="submit_tambah"
+            >
                 simpan
+            </button>
+        </template>
+    </modal_normal>
+
+    <!-- edit  -->
+    <modal_normal id="edit" title="Edit Kelas">
+        <input_normal
+            title="Nama Kelas"
+            :error="form_edit?.errors.kelas"
+            v-model="form_edit.kelas"
+            placeholder="Masukkan nama kelas"
+            :length="50"
+        />
+        <template v-slot:action>
+            <button
+                class="btn bg-warning"
+                :class="{ 'loading btn-disabled': form_edit.processing }"
+                @click="submit_edit"
+            >
+                edit
+            </button>
+        </template>
+    </modal_normal>
+
+    <!-- hapus  -->
+    <modal_normal id="hapus" title="Hapus Kelas">
+        Lanjutkan untuk menghapus kelas <b>{{ form_hapus.kelas }}</b>. Semua data yang terkait akan di hapus.
+        <template v-slot:action>
+            <button
+                class="btn bg-error"
+                :class="{ 'loading btn-disabled': form_hapus.processing }"
+                @click="submit_hapus"
+            >
+                Lanjutkan
             </button>
         </template>
     </modal_normal>
