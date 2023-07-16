@@ -4,7 +4,7 @@ namespace App\Http\Requests\jurusan;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class JurusanUpdateRequest extends FormRequest
+class JurusanDeleteRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,7 @@ class JurusanUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            "jurusan" => 'required|unique:jurusans,jurusan'
+            "id" => "required|exists:jurusans,id"
         ];
     }
 }

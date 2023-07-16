@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\jurusan;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\jurusan\JurusanDeleteRequest;
 use App\Http\Requests\jurusan\JurusanStoreRequest;
+use App\Http\Requests\jurusan\JurusanUpdateRequest;
 use App\Models\Jurusan;
 use Illuminate\Http\Request;
 
@@ -86,9 +88,11 @@ class JurusanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(JurusanUpdateRequest $request, $id)
     {
-        //
+        $jurusan = Jurusan::find($request->id);
+        $jurusan->jurusan = $request->jurusan;
+        $jurusan->save();
     }
 
     /**
@@ -97,8 +101,14 @@ class JurusanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(JurusanDeleteRequest $id)
     {
-        //
+        $jurusan = Jurusan::with("kelas")->find($id)->first();
+        
+        foreach ($jurusan->kelas as $key => $value) {
+            $value->delete();
+        }
+
+        $jurusan->delete();
     }
 }

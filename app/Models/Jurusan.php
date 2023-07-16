@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Jurusan extends Model
 {
     use HasFactory;
+    function kelas() {
+        return $this->hasMany(Kelas::class);
+    }
 }

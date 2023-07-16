@@ -75,6 +75,21 @@ export default {
                 }
             );
         },
+        data_hapus(data) {
+            this.form_hapus.id = data.id;
+            this.form_hapus.jurusan = data.jurusan;
+        },
+        submit_hapus() {
+            this.form_hapus.delete(
+                route("master.jurusan.destroy", { id: this.form_hapus.id }),
+                {
+                    onSuccess: () => {
+                        document.getElementById("hapus")?.click();
+                        this.form_hapus.reset();
+                    },
+                }
+            );
+        },
     },
     watch: {
         show() {
@@ -209,6 +224,21 @@ export default {
                 @click="submit_edit"
             >
                 edit
+            </button>
+        </template>
+    </modal_normal>
+
+    <!-- hapus  -->
+    <modal_normal id="hapus" title="Hapus Jurusan">
+        Lanjutkan untuk menghapus jurusan <b>{{ form_hapus.jurusan }}</b
+        >. Semua data yang terkait akan di hapus.
+        <template v-slot:action>
+            <button
+                class="btn bg-error"
+                :class="{ 'loading btn-disabled': form_hapus.processing }"
+                @click="submit_hapus"
+            >
+                Lanjutkan
             </button>
         </template>
     </modal_normal>
