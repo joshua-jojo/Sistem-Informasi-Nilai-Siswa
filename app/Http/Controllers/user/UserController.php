@@ -24,7 +24,7 @@ class UserController extends Controller
             'show' => $request->show ? $request->show : 5,
         ];
 
-        $role = Role::all();
+        $role = Role::where("nama","!=","murid")->where("nama","!=","wali murid")->get();
 
         $user = User::with('role');
         $user = $user->where(function($q) use($params){

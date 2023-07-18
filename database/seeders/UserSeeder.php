@@ -15,13 +15,31 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        for ($i = 1; $i <= 20; $i++) {
+        $user = new User();
+        $user->nama = "Admin";
+        $user->username = "admin";
+        $user->role_id = 1;
+        $user->alamat = "alamat admin";
+        $user->no_hp = "kontak admin";
+        $user->password  = bcrypt("1");
+        $user->save();
+
+        $user = new User();
+        $user->nama = "Kepala Sekolah";
+        $user->username = "kepala_sekolah";
+        $user->role_id = 2;
+        $user->alamat = "alamat kepala sekolah";
+        $user->no_hp = "kontak kepala sekolah";
+        $user->password  = bcrypt("1");
+        $user->save();
+        
+        for ($i = 1; $i <= 10; $i++) {
             $user = new User();
-            $user->nama = "User $i";
-            $user->username = "user$i";
-            $user->role_id = random_int(1, 5);
-            $user->alamat = "alamat$i";
-            $user->no_hp = "kontak$i";
+            $user->nama = "Guru $i";
+            $user->username = "guru$i";
+            $user->role_id = 3;
+            $user->alamat = "alamat guru $i";
+            $user->no_hp = "kontak guru $i";
             $user->password  = bcrypt("1");
             $user->save();
         }

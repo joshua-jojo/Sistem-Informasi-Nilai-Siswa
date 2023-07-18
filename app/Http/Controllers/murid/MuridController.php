@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\murid;
 
 use App\Http\Controllers\Controller;
+use App\Models\Murid;
 use Illuminate\Http\Request;
 
 class MuridController extends Controller
@@ -12,9 +13,23 @@ class MuridController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        return inertia()->render("master/murid");
+    public function index(Request $request)
+    {   
+        $params = [
+            'cari' => !empty($request->cari) ? $request->cari : '',
+            'show' => !empty($request->show) ? $request->show : 5,
+        ];
+
+        $murid = Murid::where(function($q) use ($params){
+            $q->where("nis","like","%{$params['cari']}%");
+        });
+        $murid = $murid->latest()->paginate($params['show'])->withQueryString();
+
+        $data = [
+            "params" => $params,
+            "murid" => $murid,
+        ];
+        return inertia()->render("master/murid",$data);
     }
 
     /**
