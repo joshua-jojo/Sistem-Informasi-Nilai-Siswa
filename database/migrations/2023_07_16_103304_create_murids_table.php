@@ -15,12 +15,12 @@ return new class extends Migration
     {
         Schema::create('murids', function (Blueprint $table) {
             $table->id();
-            $table->string("nis");
-            $table->string("tanggal_lahir");
-            $table->string("agama");
-            $table->integer("user_id");
-            $table->integer("kelas_id");
-            $table->integer("jurusan_id");
+            $table->string("nis")->nullable();
+            $table->string("tanggal_lahir")->nullable();
+            $table->string("agama")->nullable();
+            $table->integer("user_id")->nullable();
+            $table->integer("kelas_id")->nullable();
+            $table->integer("jurusan_id")->nullable();
             $table->integer("wali_murid")->nullable();
             $table->timestamps();
             $table->softDeletes();

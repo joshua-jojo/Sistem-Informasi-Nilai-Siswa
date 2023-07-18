@@ -16,4 +16,7 @@ class User extends Authenticatable
     public function role() {
         return $this->belongsTo(Role::class);
     }
+    public function murid() {
+        return $this->belongsTo(Murid::class);
+    }
 }

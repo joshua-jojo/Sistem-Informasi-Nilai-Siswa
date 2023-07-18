@@ -24,7 +24,7 @@ watch(
 )
 </script>
 <template lang="">
-    <div class="form-control">
+    <div class="form-control w-full">
         <label class="label">
             <span class="label-text">{{props.title}}</span>
             <span class="label-text-alt text-xs" v-if="props.length"> {{data_input.length}} / {{props.length}}</span>

@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\murid;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\murid\MuridStoreRequest;
+use App\Models\Jurusan;
 use App\Models\Murid;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class MuridController extends Controller
@@ -20,14 +23,23 @@ class MuridController extends Controller
             'show' => !empty($request->show) ? $request->show : 5,
         ];
 
-        $murid = Murid::where(function($q) use ($params){
-            $q->where("nis","like","%{$params['cari']}%");
+        $user = User::with(["role","murid"])->whereHas("role", function($q){
+            $q->where("nama","murid");
         });
-        $murid = $murid->latest()->paginate($params['show'])->withQueryString();
+
+        $user = $user->where(function($q) use($params){
+            $q->where("nama","like","%{$params['cari']}%");
+            $q->orWhere("alamat","like","%{$params['cari']}%");
+            $q->orWhere("no_hp","like","%{$params['cari']}%");
+        });
+        $user = $user->latest()->paginate($params['show'])->withQueryString();
+
+        $jurusan = Jurusan::with("kelas")->get();
 
         $data = [
             "params" => $params,
-            "murid" => $murid,
+            "murid" => $user,
+            "jurusan" => $jurusan,
         ];
         return inertia()->render("master/murid",$data);
     }
@@ -48,9 +60,17 @@ class MuridController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(MuridStoreRequest $request)
     {
-        //
+       $user = new User();
+       $user->nama = $request->nama;
+       $user->username = $request->username;
+       $user->alamat = $request->alamat;
+       $user->no_hp = $request->no_hp;
+       $user->password = bcrypt($request->password);
+       $user->save();
+
+       $murid = new Murid();
     }
 
     /**
