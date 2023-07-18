@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\absensi\AbsensiController;
+use App\Http\Controllers\agama\AgamaController;
 use App\Http\Controllers\dashboard\DashboardController;
 use App\Http\Controllers\ekskul\EkskulController;
 use App\Http\Controllers\guru\GuruController;
@@ -56,6 +57,7 @@ Route::group(['prefix' => 'master', 'as' => 'master.'], function () {
     Route::resource('murid', MuridController::class);
     Route::resource('user', UserController::class);
     Route::resource('wali-murid', WaliMuridController::class);
+    Route::apiResource('agama', AgamaController::class);
 });
 
 Route::resource('dashboard', DashboardController::class);

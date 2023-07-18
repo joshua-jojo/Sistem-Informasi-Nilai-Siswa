@@ -39,6 +39,9 @@ export default {
         murid() {
             router.get(route("master.murid.index"));
         },
+        agama() {
+            router.get(route("master.agama.index"));
+        },
         user() {
             router.get(route("master.user.index"));
         },
@@ -137,16 +140,17 @@ export default {
                             class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
                         >
                             <li class="menu-title">Master</li>
-                            <li @click="user"><a :class="{'bg-active' : store.state.page.judul == 'User'}">User</a></li>
-                            <li @click="wali_murid"><a :class="{'bg-active' : store.state.page.judul == 'Wali Murid'}">Wali Murid</a></li>
-                            <li @click="murid"><a :class="{'bg-active' : store.state.page.judul == 'Murid'}">Murid</a></li>
-                            <li @click="guru"><a :class="{'bg-active' : store.state.page.judul == 'Guru'}">Guru</a></li>
                             <li @click="jurusan"><a :class="{'bg-active' : store.state.page.judul == 'Jurusan'}">Jurusan</a></li>
                             <li @click="kelas"><a :class="{'bg-active' : store.state.page.judul == 'Kelas'}">Kelas</a></li>
                             <li @click="mata_pelajaran">
                                 <a :class="{'bg-active' : store.state.page.judul == 'Mata Pelajaran'}">Mata Pelajaran</a>
                             </li>
                             <li @click="ekskul"><a :class="{'bg-active' : store.state.page.judul == 'Ekskul'}">Ekskul</a></li>
+                            <li @click="agama"><a :class="{'bg-active' : store.state.page.judul == 'Agama'}">Agama</a></li>
+                            <li @click="murid"><a :class="{'bg-active' : store.state.page.judul == 'Murid'}">Murid</a></li>
+                            <li @click="wali_murid"><a :class="{'bg-active' : store.state.page.judul == 'Wali Murid'}">Wali Murid</a></li>
+                            <li @click="guru"><a :class="{'bg-active' : store.state.page.judul == 'Guru'}">Guru</a></li>
+                            <li @click="user"><a :class="{'bg-active' : store.state.page.judul == 'User'}">User</a></li>
                         </ul>
                     </li>
                     <li
