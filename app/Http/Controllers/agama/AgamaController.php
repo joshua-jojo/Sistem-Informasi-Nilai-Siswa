@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\agama;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\agama\AgamaDeleteRequest;
 use App\Http\Requests\agama\AgamaStoreRequest;
+use App\Http\Requests\agama\AgamaUpdateRequest;
 use App\Models\Agama;
 use Illuminate\Http\Request;
 
@@ -21,13 +23,13 @@ class AgamaController extends Controller
             'show' => !empty($request->show) ? $request->show : 5,
         ];
 
-        $agama = Agama::where("agama",'like',"%{$params['cari']}%")->get();
+        $agama = Agama::where("agama", 'like', "%{$params['cari']}%")->get();
 
         $data = [
             'agama' => $agama,
             'params' => $params,
         ];
-        return inertia()->render('master/agama',$data);
+        return inertia()->render('master/agama', $data);
     }
 
     /**
@@ -61,9 +63,11 @@ class AgamaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(AgamaUpdateRequest $request, $id)
     {
-        //
+        $agama = Agama::find($request->id);
+        $agama->agama = $request->agama;
+        $agama->save();
     }
 
     /**
@@ -72,8 +76,9 @@ class AgamaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(AgamaDeleteRequest $id)
     {
-        //
+        $agama = Agama::find($id)->first();
+        $agama->delete();
     }
 }
