@@ -9,4 +9,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Murid extends Model
 {
     use HasFactory, SoftDeletes;
+
+    function agama() {
+        return $this->belongsTo(Agama::class);
+    }
+
+    function kelas() {
+        return $this->belongsTo(Kelas::class);
+    }
+
+    function jurusan() {
+        return $this->belongsTo(Jurusan::class);
+    }
 }

@@ -4,7 +4,7 @@ namespace App\Http\Requests\murid;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class MuridStoreRequest extends FormRequest
+class MuridDeleteRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,15 +24,7 @@ class MuridStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            "nama" => "required",
-            "username" => "required|unique:users,username",
-            "no_hp" => "required|unique:users,no_hp",
-            "password" => "required|confirmed",
-            "alamat" => "required",
-            "tanggal_lahir" => "required",
-            "kelas_id" => "required",
-            "agama_id" => "required|exists:agamas,id",
-            "jurusan_id" => "required",
+            "id" => "required|exists:users,id"
         ];
     }
 }

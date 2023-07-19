@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('murids', function (Blueprint $table) {
             $table->id();
-            $table->string("nis")->nullable();
-            $table->string("tanggal_lahir")->nullable();
-            $table->string("agama")->nullable();
+            $table->string("nis")->default("-");
+            $table->string("tanggal_lahir")->default("-");
+            $table->integer("agama_id")->nullable();
             $table->integer("user_id")->nullable();
             $table->integer("kelas_id")->nullable();
             $table->integer("jurusan_id")->nullable();
