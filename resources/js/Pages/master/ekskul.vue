@@ -219,7 +219,7 @@ export default {
     <!-- edit  -->
     <modal_normal id="edit" title="Edit ekskul">
         <input_normal
-            title="ekskul"
+            title="Ekskul"
             placeholder="Masukkan Ekskul"
             v-model="form_edit.ekskul"
             :length="50"

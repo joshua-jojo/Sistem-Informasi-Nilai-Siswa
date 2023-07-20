@@ -13,7 +13,7 @@ class EkskulUpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,8 @@ class EkskulUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            "id" => "required|exists:ekskuls,id",
+            "ekskul" => "required|unique:ekskuls,id",
         ];
     }
 }
