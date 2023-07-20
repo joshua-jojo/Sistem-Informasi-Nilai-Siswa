@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\mata_pelajaran;
 
 use App\Http\Controllers\Controller;
+use App\Models\MataPelajaran;
 use Illuminate\Http\Request;
 
 class MataPelajaranController extends Controller
@@ -12,9 +13,22 @@ class MataPelajaranController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return inertia()->render('master/mata_pelajaran');
+        $params = [
+            'cari' => !empty($request->cari) ? $request->cari : '',
+            'show' => !empty($request->show) ? $request->show : 5,
+        ];
+
+        $pelajaran = MataPelajaran::where(function($q) use ($params){
+            $q->where("pelajaran" ,'like',"%{$params['cari']}%");
+        });
+        $pelajaran = $pelajaran->latest()->paginate($params['show'])->withQueryString();
+
+        $data = [
+            "params" => $params
+        ];
+        return inertia()->render('master/mata_pelajaran',$data);
     }
 
     /**
