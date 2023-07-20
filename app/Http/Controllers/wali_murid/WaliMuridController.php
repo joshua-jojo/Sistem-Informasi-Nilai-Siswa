@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\wali_murid;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\wali_murid\WaliMuridDeleteRequest;
 use App\Http\Requests\wali_murid\WaliMuridStoreRequest;
 use App\Http\Requests\wali_murid\WaliMuridUpdateRequest;
 use App\Models\Murid;
@@ -149,8 +150,11 @@ class WaliMuridController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(WaliMuridDeleteRequest $id)
     {
-        //
+        $user = User::find($id)->first();
+        $user->wali_murid()->delete();
+        $user->delete();
+        
     }
 }

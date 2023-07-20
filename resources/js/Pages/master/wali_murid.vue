@@ -46,9 +46,15 @@ export default {
             murid_id: null,
         });
 
+        const form_hapus = useForm({
+            id: null,
+            nama: "",
+        });
+
         return {
             form_tambah,
             form_edit,
+            form_hapus,
         }
     },
     data(){
@@ -83,11 +89,24 @@ export default {
             this.form_edit.alamat = await data.alamat
             this.form_edit.murid_id = data.wali_murid?.murid_id
         },
+
+        async data_hapus(data){
+            this.form_hapus.id = await data.id
+            this.form_hapus.nama = await data.nama
+        },
         submit_edit() {
             this.form_edit.put(route("master.wali-murid.update",{id : this.form_edit.id}), {
                 onSuccess: () => {
                     document.getElementById("edit")?.click();
                     this.form_edit.reset();
+                },
+            });
+        },
+        submit_hapus() {
+            this.form_hapus.delete(route("master.wali-murid.destroy",{id : this.form_hapus.id}), {
+                onSuccess: () => {
+                    document.getElementById("hapus")?.click();
+                    this.form_hapus.reset();
                 },
             });
         },
@@ -168,6 +187,7 @@ export default {
                                     <label
                                         for="hapus"
                                         class="btn btn-xs bg-danger"
+                                        @click="data_hapus(item)"
                                     >
                                         <i class="fa fa-pen"></i>
                                         hapus
@@ -338,6 +358,21 @@ export default {
                 @click="submit_edit"
             >
                 Edit
+            </button>
+        </template>
+    </Modal_normal>
+
+    <!-- hapus  -->
+    <Modal_normal id="hapus" :title="'Hapus Wali Murid ' + form_hapus.nama">
+        Perhatian untuk menghapus pengguna <b>{{ form_hapus.nama }}</b
+        >. Semua data yang terkait akan di hapus dari sistem. Tetap lanjutkan?
+        <template v-slot:action>
+            <button
+                class="btn bg-danger"
+                :class="{ 'loading btn-disabled': form_hapus.processing }"
+                @click="submit_hapus"
+            >
+                Lanjutkan
             </button>
         </template>
     </Modal_normal>
