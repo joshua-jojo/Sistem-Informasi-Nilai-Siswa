@@ -19,4 +19,7 @@ class User extends Authenticatable
     public function murid() {
         return $this->hasOne(Murid::class);
     }
+    public function wali_murid() {
+        return $this->hasOne(WaliMurid::class);
+    }
 }

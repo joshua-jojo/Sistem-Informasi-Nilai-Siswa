@@ -1,21 +1,45 @@
 <script>
 import menu_layout from "../../layout/menu_layout.vue";
 import { useStore } from "vuex";
-import input_normal from "../../component/input/input_normal.vue";
-import { Link,router } from "@inertiajs/vue3";
-import modal_normal from "../../component/modal/modal_normal.vue"
+import Textarea_normal from "../../component/input/textarea_normal.vue";
+import Select_normal from "../../component/input/select_normal.vue";
+import Input_normal from "../../component/input/input_normal.vue";
+import Input_filter from "../../component/input/input_filter.vue";
+import Input_password from "../../component/input/input_password.vue";
+import { Link,router,useForm } from "@inertiajs/vue3";
+import Modal_normal from "../../component/modal/modal_normal.vue"
 export default {
     layout: menu_layout,
     components: {
-        input_normal,
+        Input_normal,
+        Textarea_normal,
         Link,
-        modal_normal
+        Modal_normal,
+        Select_normal,
+        Input_password,
+        Input_filter,
     },
-    props: ["user",'params'],
+    props: ["user",'params',"murid"],
     setup() {
         const store = useStore();
         store.state.page.bagian = "Master";
         store.state.page.judul = "Wali Murid";
+
+        const form_tambah = useForm({
+            nama: "",
+            username: "",
+            password: "",
+            password_confirmation: "",
+            no_hp: "",
+            status: "",
+            alamat: "",
+            role_id: null,
+            murid_id: null,
+        });
+
+        return {
+            form_tambah
+        }
     },
     data(){
         return {
@@ -32,7 +56,15 @@ export default {
             router.get(route("master.wali-murid.index"),params,{
                 preserveState : true
             })
-        }
+        },
+        submit_tambah() {
+            this.form_tambah.post(route("master.wali-murid.store"), {
+                onSuccess: () => {
+                    document.getElementById("tambah")?.click();
+                    this.form_tambah.reset();
+                },
+            });
+        },
     },
     watch : {
         show(){
@@ -47,7 +79,10 @@ export default {
 
 <template>
     <div class="flex flex-col gap-4">
-        <div class="flex justify-end">
+        <div class="flex justify-between">
+            <label for="tambah" class="btn btn-xs bg-success">
+                <i class="fa fa-plus"></i> tambah
+            </label>
             <div class="flex gap-4">
                 <div class="form-control">
                     <input
@@ -85,7 +120,10 @@ export default {
                             <td>{{index + 1}}</td>
                             <td>{{ item.nama }}</td>
                             <td>
-                                <div class="badge bg-danger bg-red-100 text-xs">
+                                <div v-if="item.wali_murid?.murid">
+                                    {{ item.wali_murid?.murid?.nama }}
+                                </div>
+                                <div class="badge bg-danger bg-red-100 text-xs" v-else>
                                     Belum Diatur
                                 </div>
                             </td>
@@ -137,7 +175,72 @@ export default {
         </div>
     </div>
     
-    <modal_normal id="edit" title="Edit Wali Murid">
-        
-    </modal_normal>
+    <Modal_normal id="tambah" title="Tambah Wali Murid">
+        <div class="grid grid-cols-2 gap-4">
+            <Input_normal
+                v-model="form_tambah.nama"
+                :error="form_tambah.errors.nama"
+                :length="100"
+                title="Nama"
+                placeholder="Masukkan Nama"
+            />
+            <Input_normal
+                v-model="form_tambah.username"
+                :error="form_tambah.errors.username"
+                :length="100"
+                title="Username"
+                placeholder="Masukkan Username"
+            />
+        </div>
+        <Input_normal
+            v-model="form_tambah.no_hp"
+            :error="form_tambah.errors.no_hp"
+            :length="15"
+            autocomplete="off"
+            title="Nomor Handphone"
+            placeholder="Masukkan Nomor Handphone"
+        /> 
+        <Input_filter
+            v-model="form_tambah.murid_id"
+            :error="form_tambah.errors.murid_id"
+            :title="'Murid'"
+            :data="murid"
+            label="nama"
+            get="id"
+            :capitalize="true"
+            placeholder="Pilih Murid"
+        /> 
+        <Textarea_normal
+            v-model="form_tambah.alamat"
+            :error="form_tambah.errors.alamat"
+            :length="100"
+            title="Alamat"
+            placeholder="Masukkan Alamat"
+        />
+        <div class="grid grid-cols-2 gap-4">
+            <Input_password
+                v-model="form_tambah.password"
+                :error="form_tambah.errors.password"
+                :length="100"
+                title="Password"
+                placeholder="Masukkan Nama"
+            />
+            <Input_password
+                v-model="form_tambah.password_confirmation"
+                :length="100"
+                title="Konfirmasi Password"
+                placeholder="Masukkan Username"
+            />
+        </div>
+
+        <template v-slot:action>
+            <button
+                class="btn bg-success"
+                :class="{ 'loading btn-disabled': form_tambah.processing }"
+                @click="submit_tambah"
+            >
+                simpan
+            </button>
+        </template>
+    </Modal_normal>
 </template>
