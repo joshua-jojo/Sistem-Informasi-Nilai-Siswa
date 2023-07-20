@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\mata_pelajaran;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\mata_pelajaran\MataPelajaranStoreRequest;
 use App\Models\MataPelajaran;
 use Illuminate\Http\Request;
 
@@ -26,6 +27,7 @@ class MataPelajaranController extends Controller
         $pelajaran = $pelajaran->latest()->paginate($params['show'])->withQueryString();
 
         $data = [
+            "pelajaran" => $pelajaran,
             "params" => $params
         ];
         return inertia()->render('master/mata_pelajaran',$data);
@@ -47,9 +49,11 @@ class MataPelajaranController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(MataPelajaranStoreRequest $request)
     {
-        //
+        $pelajaran = new MataPelajaran();
+        $pelajaran->pelajaran = $request->pelajaran;
+        $pelajaran->save();
     }
 
     /**
