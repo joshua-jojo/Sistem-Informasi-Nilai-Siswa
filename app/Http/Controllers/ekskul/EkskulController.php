@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\ekskul;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ekskul\EkskulStoreRequest;
+use App\Models\Ekskul;
 use Illuminate\Http\Request;
 
 class EkskulController extends Controller
@@ -12,9 +14,23 @@ class EkskulController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return inertia()->render('master/ekskul');
+        $params = [
+            'cari' => !empty($request->cari) ? $request->cari : '',
+            'show' => !empty($request->show) ? $request->show : 5,
+        ];
+
+        $ekskul = Ekskul::where(function($q) use ($params){
+            $q->where("ekskul" ,'like',"%{$params['cari']}%");
+        });
+        $ekskul = $ekskul->latest()->paginate($params['show'])->withQueryString();
+
+        $data = [
+            "ekskul" => $ekskul,
+            "params" => $params
+        ];
+        return inertia()->render('master/ekskul',$data);
     }
 
     /**
@@ -33,9 +49,11 @@ class EkskulController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(EkskulStoreRequest $request)
     {
-        //
+        $ekskul = new Ekskul();
+        $ekskul->ekskul = $request->ekskul;
+        $ekskul->save(); 
     }
 
     /**
