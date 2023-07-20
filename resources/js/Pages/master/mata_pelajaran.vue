@@ -20,9 +20,22 @@ export default {
         const form_tambah = useForm({
             pelajaran: "",
         });
+
+        const form_edit = useForm({
+            id: null,
+            pelajaran: "",
+        });
+
+        const form_hapus = useForm({
+            id: null,
+            pelajaran: "",
+        });
+
         return {
             store,
             form_tambah,
+            form_edit,
+            form_hapus,
         };
     },
     data() {
@@ -46,6 +59,30 @@ export default {
                 onSuccess : () => {
                     document.getElementById("tambah")?.click()
                     this.form_tambah.reset();
+                }
+            })
+        },
+        data_edit(data){
+            this.form_edit.id = data.id
+            this.form_edit.pelajaran = data.pelajaran
+        },
+        submit_edit(){
+            this.form_edit.put(route("master.mata-pelajaran.update",{id : this.form_edit.id}),{
+                onSuccess : () => {
+                    document.getElementById("edit")?.click()
+                    this.form_edit.reset();
+                }
+            })
+        },
+        data_hapus(data){
+            this.form_hapus.id = data.id
+            this.form_hapus.pelajaran = data.pelajaran
+        },
+        submit_hapus(){
+            this.form_hapus.delete(route("master.mata-pelajaran.destroy",{id : this.form_hapus.id}),{
+                onSuccess : () => {
+                    document.getElementById("hapus")?.click()
+                    this.form_hapus.reset();
                 }
             })
         },
@@ -175,6 +212,42 @@ export default {
                 @click="submit_tambah"
             >
                 tambah
+            </button>
+        </template>
+    </modal_normal>
+
+    <!-- edit  -->
+    <modal_normal id="edit" title="Edit Pelajaran">
+        <input_normal
+            title="Pelajaran"
+            placeholder="Masukkan Mata Pelajaran"
+            v-model="form_edit.pelajaran"
+            :length="50"
+            :error="form_edit.errors.pelajaran"
+        />
+
+        <template v-slot:action>
+            <button
+                class="btn bg-warning"
+                :class="{ 'loading btn-disabled': form_edit.processing }"
+                @click="submit_edit"
+            >
+                edit
+            </button>
+        </template>
+    </modal_normal>
+
+    <!-- hapus  -->
+    <modal_normal id="hapus" title="Hapus Mata Pelajaran">
+        Lanjutkan untuk menghapus mata pelajaran <b>{{ form_hapus.pelajaran }}</b
+        >. Semua data yang terkait akan di hapus.
+        <template v-slot:action>
+            <button
+                class="btn bg-error"
+                :class="{ 'loading btn-disabled': form_hapus.processing }"
+                @click="submit_hapus"
+            >
+                Lanjutkan
             </button>
         </template>
     </modal_normal>

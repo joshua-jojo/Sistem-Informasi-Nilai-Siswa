@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\mata_pelajaran;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\mata_pelajaran\MataPelajaranDeleteRequest;
 use App\Http\Requests\mata_pelajaran\MataPelajaranStoreRequest;
+use App\Http\Requests\mata_pelajaran\MataPelajaranUpdateRequest;
 use App\Models\MataPelajaran;
 use Illuminate\Http\Request;
 
@@ -85,9 +87,11 @@ class MataPelajaranController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(MataPelajaranUpdateRequest $request, $id)
     {
-        //
+        $pelajaran = MataPelajaran::find($request->id);
+        $pelajaran->pelajaran = $request->pelajaran;
+        $pelajaran->save();
     }
 
     /**
@@ -96,8 +100,9 @@ class MataPelajaranController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(MataPelajaranDeleteRequest $id)
     {
-        //
+        $pelajaran = MataPelajaran::find($id)->first();
+        $pelajaran->delete();
     }
 }
