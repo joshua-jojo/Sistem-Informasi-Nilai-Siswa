@@ -31,14 +31,24 @@ export default {
             password: "",
             password_confirmation: "",
             no_hp: "",
-            status: "",
             alamat: "",
-            role_id: null,
+            murid_id: null,
+        });
+
+        const form_edit = useForm({
+            id: null,
+            nama: "",
+            username: "",
+            password: "",
+            password_confirmation: "",
+            no_hp: "",
+            alamat: "",
             murid_id: null,
         });
 
         return {
-            form_tambah
+            form_tambah,
+            form_edit,
         }
     },
     data(){
@@ -62,6 +72,22 @@ export default {
                 onSuccess: () => {
                     document.getElementById("tambah")?.click();
                     this.form_tambah.reset();
+                },
+            });
+        },
+        async data_edit(data){
+            this.form_edit.id = await data.id
+            this.form_edit.nama = await data.nama
+            this.form_edit.username = await data.username
+            this.form_edit.no_hp = await data.no_hp
+            this.form_edit.alamat = await data.alamat
+            this.form_edit.murid_id = data.wali_murid?.murid_id
+        },
+        submit_edit() {
+            this.form_edit.put(route("master.wali-murid.update",{id : this.form_edit.id}), {
+                onSuccess: () => {
+                    document.getElementById("edit")?.click();
+                    this.form_edit.reset();
                 },
             });
         },
@@ -133,6 +159,7 @@ export default {
                                 <div class="flex gap-2 justify-center">
                                     <label
                                         for="edit"
+                                        @click="data_edit(item)"
                                         class="btn btn-xs bg-warning"
                                     >
                                         <i class="fa fa-pen"></i>
@@ -175,6 +202,7 @@ export default {
         </div>
     </div>
     
+    <!-- tambah  -->
     <Modal_normal id="tambah" title="Tambah Wali Murid">
         <div class="grid grid-cols-2 gap-4">
             <Input_normal
@@ -240,6 +268,76 @@ export default {
                 @click="submit_tambah"
             >
                 simpan
+            </button>
+        </template>
+    </Modal_normal>
+
+    <!-- edit  -->
+    <Modal_normal id="edit" title="Edit Wali Murid">
+        <div class="grid grid-cols-2 gap-4">
+            <Input_normal
+                v-model="form_edit.nama"
+                :error="form_edit.errors.nama"
+                :length="100"
+                title="Nama"
+                placeholder="Masukkan Nama"
+            />
+            <Input_normal
+                v-model="form_edit.username"
+                :error="form_edit.errors.username"
+                :length="100"
+                title="Username"
+                placeholder="Masukkan Username"
+            />
+        </div>
+        <Input_normal
+            v-model="form_edit.no_hp"
+            :error="form_edit.errors.no_hp"
+            :length="15"
+            autocomplete="off"
+            title="Nomor Handphone"
+            placeholder="Masukkan Nomor Handphone"
+        /> 
+        <Input_filter
+            v-model="form_edit.murid_id"
+            :error="form_edit.errors.murid_id"
+            :title="'Murid'"
+            :data="murid"
+            label="nama"
+            get="id"
+            :capitalize="true"
+            placeholder="Pilih Murid"
+        /> 
+        <Textarea_normal
+            v-model="form_edit.alamat"
+            :error="form_edit.errors.alamat"
+            :length="100"
+            title="Alamat"
+            placeholder="Masukkan Alamat"
+        />
+        <div class="grid grid-cols-2 gap-4">
+            <Input_password
+                v-model="form_edit.password"
+                :error="form_edit.errors.password"
+                :length="100"
+                title="Password"
+                placeholder="Masukkan Nama"
+            />
+            <Input_password
+                v-model="form_edit.password_confirmation"
+                :length="100"
+                title="Konfirmasi Password"
+                placeholder="Masukkan Username"
+            />
+        </div>
+
+        <template v-slot:action>
+            <button
+                class="btn bg-warning"
+                :class="{ 'loading btn-disabled': form_edit.processing }"
+                @click="submit_edit"
+            >
+                Edit
             </button>
         </template>
     </Modal_normal>

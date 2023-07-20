@@ -4,6 +4,8 @@ namespace App\Http\Controllers\wali_murid;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\wali_murid\WaliMuridStoreRequest;
+use App\Http\Requests\wali_murid\WaliMuridUpdateRequest;
+use App\Models\Murid;
 use App\Models\User;
 use App\Models\WaliMurid;
 use Illuminate\Http\Request;
@@ -108,9 +110,37 @@ class WaliMuridController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(WaliMuridUpdateRequest $request, $id)
     {
-        //
+        $user = User::find($request->id);
+        $user->nama = $request->nama;
+        $user->alamat = $request->alamat;
+
+        if($request->username != $user->username){
+            $request->validate([
+                'username' => "unique:users,username"
+            ]);
+            $user->username = $request->username;
+        }
+
+        if($request->no_hp != $user->no_hp){
+            $request->validate([
+                'no_hp' => "unique:users,no_hp"
+            ]);
+            $user->no_hp = $request->no_hp;
+        }
+        
+        if(!empty($request->password)){
+            $request->validate([
+                'password' => "confirmed"
+            ]);
+            $user->password = bcrypt($request->password);
+        }
+        $user->save();
+
+        $wali_murid = WaliMurid::where("user_id",$request->id)->first();
+        $wali_murid->murid_id = $request->murid_id;
+        $wali_murid->save();
     }
 
     /**

@@ -66,6 +66,17 @@ export default {
             this.$emit("update:modelValue", null);
         },
     },
+    watch : {
+        "modelValue"(baru){
+            const input_user = this.input_user == null || this.input_user.length == 0
+            if(baru > 0 && input_user){
+                const data = this.data.find((e) => {
+                    return e.id == baru
+                })
+                this.input_user = data.nama
+            }
+        }
+    },
     computed: {
         data_pick() {
             if (this.modelValue == null) {
