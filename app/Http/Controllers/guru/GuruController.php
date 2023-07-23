@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\guru;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\guru\GuruStoreRequests;
+use App\Models\Guru;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class GuruController extends Controller
@@ -12,9 +15,24 @@ class GuruController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return inertia()->render('master/guru');
+        $params = [
+            'cari' => !empty($request->cari) ? $request->cari : '',
+            'show' => !empty($request->show) ? $request->show : 5,
+        ];
+
+        $guru = User::with(['guru'])->where("role_id", 3);
+        $guru = $guru->where(function ($q) use ($params) {
+            $q->where("nama", "like", "%{$params['cari']}%");
+        });
+        $guru = $guru->latest()->paginate($params['show'])->withQueryString();
+
+        $data = [
+            "params" => $params,
+            "guru" => $guru,
+        ];
+        return inertia()->render('master/guru', $data);
     }
 
     /**
@@ -33,9 +51,23 @@ class GuruController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(GuruStoreRequests $request)
     {
-        //
+        $user = new User();
+        $user->nama = $request->nama;
+        $user->username = $request->username;
+        $user->no_hp = $request->no_hp;
+        $user->alamat = $request->alamat;
+        $user->role_id = 3;
+        $user->password = $request->password;
+        $user->save();
+
+        $guru_terakhir = Guru::latest()->first();
+        $urutan = !empty($guru_terakhir) ? $guru_terakhir->id + 1 : 1;
+        $guru = new Guru();
+        $guru->nip = sprintf("G-%06s", $urutan);
+        $guru->user_id = $user->id;
+        $guru->save();
     }
 
     /**

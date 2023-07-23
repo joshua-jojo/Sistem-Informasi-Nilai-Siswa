@@ -22,4 +22,8 @@ class User extends Authenticatable
     public function wali_murid() {
         return $this->hasOne(WaliMurid::class);
     }
+
+    public function guru() {
+        return $this->hasOne(Guru::class);
+    }
 }
