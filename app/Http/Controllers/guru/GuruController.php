@@ -4,6 +4,7 @@ namespace App\Http\Controllers\guru;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\guru\GuruStoreRequests;
+use App\Http\Requests\guru\GuruUpdateRequests;
 use App\Models\Guru;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -99,9 +100,26 @@ class GuruController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(GuruUpdateRequests $request, $id)
     {
-        //
+        $user = User::find($request->id);
+        $user->nama = $request->nama;
+        $user->alamat = $request->alamat;
+
+        if(!empty($request->password)){
+            $request->validate([
+                'password' => "confirmed"
+            ]);
+            $user->password = bcrypt($request->password);
+        }
+        if($request->no_hp != $user->no_hp){
+            $request->validate([
+                'no_hp' => "unique:users:no_hp"
+            ]);
+            $user->no_hp = $request->no_hp;
+        }
+
+        $user->save();
     }
 
     /**

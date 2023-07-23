@@ -68,13 +68,26 @@ export default {
                 },
             });
         },
-        data_edit(data){
-            this.form_edit.id = data.id
-            this.form_edit.nama = data.nama
-            this.form_edit.username = data.username
-            this.form_edit.alamat = data.alamat
-            this.form_edit.no_hp = data.no_hp
-        }
+        data_edit(data) {
+            this.form_edit.id = data.id;
+            this.form_edit.nama = data.nama;
+            this.form_edit.username = data.username;
+            this.form_edit.alamat = data.alamat;
+            this.form_edit.no_hp = data.no_hp;
+        },
+        submit_edit() {
+            this.form_edit.put(
+                route("master.guru.update", {
+                    id: this.form_edit.id,
+                }),
+                {
+                    onSuccess: () => {
+                        document.getElementById("edit")?.click();
+                        this.form_edit.reset();
+                    },
+                }
+            );
+        },
     },
     watch: {
         show() {
@@ -246,7 +259,11 @@ export default {
         </div>
 
         <template v-slot:action>
-            <button class="btn bg-success" :disabled="form_tambah.processing" @click="submit_tambah">
+            <button
+                class="btn bg-success"
+                :disabled="form_tambah.processing"
+                @click="submit_tambah"
+            >
                 <span class="loading" v-if="form_tambah.processing"></span>
                 tambah
             </button>
@@ -302,9 +319,13 @@ export default {
         </div>
 
         <template v-slot:action>
-            <button class="btn bg-success" :disabled="form_tambah.processing" @click="submit_tambah">
-                <span class="loading" v-if="form_tambah.processing"></span>
-                tambah
+            <button
+                class="btn bg-warning"
+                :disabled="form_edit.processing"
+                @click="submit_edit"
+            >
+                <span class="loading" v-if="form_edit.processing"></span>
+                edit
             </button>
         </template>
     </modal_normal>
