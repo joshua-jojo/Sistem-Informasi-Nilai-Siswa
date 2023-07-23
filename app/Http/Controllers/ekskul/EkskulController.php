@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\ekskul;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ekskul\EkskulDeleteRequest;
 use App\Http\Requests\ekskul\EkskulStoreRequest;
 use App\Http\Requests\ekskul\EkskulUpdateRequest;
 use App\Models\Ekskul;
@@ -99,8 +100,9 @@ class EkskulController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(EkskulDeleteRequest $id)
     {
-        //
+        $ekskul = Ekskul::find($id)->first();
+        $ekskul->delete();
     }
 }
