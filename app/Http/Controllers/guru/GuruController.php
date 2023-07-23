@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\guru;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\guru\GuruDeleteRequests;
 use App\Http\Requests\guru\GuruStoreRequests;
 use App\Http\Requests\guru\GuruUpdateRequests;
 use App\Models\Guru;
@@ -128,8 +129,10 @@ class GuruController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(GuruDeleteRequests $id)
     {
-        //
+        $user = User::with("guru")->find($id)->first();
+        $user->guru->delete();
+        $user->delete();
     }
 }

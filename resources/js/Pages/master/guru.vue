@@ -31,9 +31,14 @@ export default {
             alamat: "",
             no_hp: "",
         });
+
+        const form_hapus = useForm({
+            id: null,
+        });
         return {
             form_tambah,
             form_edit,
+            form_hapus,
         };
     },
     props: ["params", "guru", "mata_pelajaran"],
@@ -84,6 +89,23 @@ export default {
                     onSuccess: () => {
                         document.getElementById("edit")?.click();
                         this.form_edit.reset();
+                    },
+                }
+            );
+        },
+        data_hapus(data) {
+            this.form_hapus.id = data.id;
+            this.form_hapus.nama = data.nama;
+        },
+        submit_hapus() {
+            this.form_hapus.delete(
+                route("master.guru.destroy", {
+                    id: this.form_hapus.id,
+                }),
+                {
+                    onSuccess: () => {
+                        document.getElementById("hapus")?.click();
+                        this.form_hapus.reset();
                     },
                 }
             );
@@ -326,6 +348,17 @@ export default {
             >
                 <span class="loading" v-if="form_edit.processing"></span>
                 edit
+            </button>
+        </template>
+    </modal_normal>
+
+    <!-- hapus  -->
+    <modal_normal id="hapus" title="Hapus Guru">
+        Lanjutkan untuk menghapus data <b>{{ form_hapus.nama }}</b>. Data yang terkait akan di hapus.
+        <template v-slot:action>
+            <button class="btn btn-error" :disabled="form_hapus.processing" @click="submit_hapus">
+                <span class="loading" v-if="form_hapus.processing"></span>
+                lanjutkan
             </button>
         </template>
     </modal_normal>
