@@ -5,6 +5,7 @@ use App\Http\Controllers\agama\AgamaController;
 use App\Http\Controllers\dashboard\DashboardController;
 use App\Http\Controllers\ekskul\EkskulController;
 use App\Http\Controllers\guru\GuruController;
+use App\Http\Controllers\jadwal_pelajaran\JadwalPelajaranController;
 use App\Http\Controllers\jurusan\JurusanController;
 use App\Http\Controllers\kelas\KelasController;
 use App\Http\Controllers\mata_pelajaran\MataPelajaranController;
@@ -58,6 +59,7 @@ Route::group(['prefix' => 'master', 'as' => 'master.'], function () {
     Route::resource('user', UserController::class);
     Route::resource('wali-murid', WaliMuridController::class);
     Route::apiResource('agama', AgamaController::class);
+    Route::apiResource('jadwal-pelajaran', JadwalPelajaranController::class);
 });
 
 Route::resource('dashboard', DashboardController::class);
