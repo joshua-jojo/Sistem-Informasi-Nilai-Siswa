@@ -5,6 +5,7 @@ namespace App\Http\Controllers\jadwal_pelajaran;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\jadwal_pelajaran\JadwalPelajaranDeleteRequests;
 use App\Http\Requests\jadwal_pelajaran\JadwalPelajaranStoreRequests;
+use App\Http\Requests\jadwal_pelajaran\JadwalPelajaranUpdateRequests;
 use App\Models\JadwalPelajaran;
 use App\Models\Kelas;
 use App\Models\MataPelajaran;
@@ -109,9 +110,28 @@ class JadwalPelajaranController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(JadwalPelajaranUpdateRequests $request, $id)
     {
-        //
+        $jadwal = JadwalPelajaran::where(function ($q) use ($request) {
+            $q->where("tanggal", $request->tanggal);
+            $q->where("kelas_id", $request->kelas_id);
+            $q->whereTime("selesai", ">", $request->mulai);
+        })->first();
+
+        if (!empty($jadwal)) {
+            return redirect()->back()->withErrors([
+                "update_jadwal" => "Jadwal telah di pakai."
+            ]);
+        }
+
+        $jadwal_pelajaran = JadwalPelajaran::find($request->id);
+        $jadwal_pelajaran->user_id = $request->guru_id;
+        $jadwal_pelajaran->kelas_id = $request->kelas_id;
+        $jadwal_pelajaran->mata_pelajaran_id = $request->mata_pelajaran_id;
+        $jadwal_pelajaran->tanggal = $request->tanggal;
+        $jadwal_pelajaran->mulai = $request->mulai;
+        $jadwal_pelajaran->selesai = $request->selesai;
+        $jadwal_pelajaran->save();
     }
 
     /**

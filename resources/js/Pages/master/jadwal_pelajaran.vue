@@ -50,13 +50,13 @@
                         v-if="jadwal_pelajaran?.data.length"
                     >
                         <td>{{ index + 1 }}</td>
-                        <td>{{item.user?.guru?.nip}}</td>
-                        <td>{{item?.user?.nama}}</td>
-                        <td>{{item?.kelas?.kelas}}</td>
-                        <td>{{item?.mata_pelajaran?.pelajaran}}</td>
-                        <td>{{format_tanggal(new Date(item.tanggal))}}</td>
-                        <td>{{item.mulai}}</td>
-                        <td>{{item.selesai}}</td>
+                        <td>{{ item.user?.guru?.nip }}</td>
+                        <td>{{ item?.user?.nama }}</td>
+                        <td>{{ item?.kelas?.kelas }}</td>
+                        <td>{{ item?.mata_pelajaran?.pelajaran }}</td>
+                        <td>{{ format_tanggal(new Date(item.tanggal)) }}</td>
+                        <td>{{ item.mulai }}</td>
+                        <td>{{ item.selesai }}</td>
                         <td class="w-40">
                             <div class="flex gap-2 w-full">
                                 <label
@@ -171,13 +171,13 @@
                         />
                     </div>
                     <div
-                            class="label col-span-2 "
-                            v-if="form_tambah.errors.jadwal"
-                        >
-                            <span class="label-text-alt text-error">
-                                {{ form_tambah.errors.jadwal }}
-                            </span>
-                        </div>
+                        class="label col-span-2"
+                        v-if="form_tambah.errors.jadwal"
+                    >
+                        <span class="label-text-alt text-error">
+                            {{ form_tambah.errors.jadwal }}
+                        </span>
+                    </div>
                     <button
                         class="btn btn-primary"
                         @click="tambah_jadwal"
@@ -196,8 +196,19 @@
                         :key="index"
                     >
                         <div class="card-body gap-2">
-                            <div class="label" v-if="form_tambah.errors?.[`jadwal${item.tanggal}${item.mulai}${item.selesai}`]">
-                                <span class="label-text-alt text-error">{{form_tambah?.errors?.[`jadwal${item.tanggal}${item.mulai}${item.selesai}`]}}</span>
+                            <div
+                                class="label"
+                                v-if="
+                                    form_tambah.errors?.[
+                                        `jadwal${item.tanggal}${item.mulai}${item.selesai}`
+                                    ]
+                                "
+                            >
+                                <span class="label-text-alt text-error">{{
+                                    form_tambah?.errors?.[
+                                        `jadwal${item.tanggal}${item.mulai}${item.selesai}`
+                                    ]
+                                }}</span>
                             </div>
                             <table class="table table-xs">
                                 <tbody>
@@ -271,10 +282,85 @@
         </template>
     </modal_lg>
 
-    <modal_normal id="hapus" title="Hapus Jadwal Pelajaran">
-        Lanjutkan untuk menghapus Jadwal Pelajaran. Data yang terkait akan di hapus.
+    <modal_normal id="edit" title="Edit Jadwal">
+        <div class="label" v-if="form_edit.errors.update_jadwal">
+            <span class="label-text-alt text-error">
+                {{form_edit.errors.update_jadwal}}
+            </span>
+        </div>
+        <Select_normal
+            title="Guru"
+            label="nama"
+            get="id"
+            :data="guru"
+            placeholder="Pilih Guru"
+            v-model="form_edit.guru_id"
+            :error="form_edit.errors.guru_id"
+        />
+
+        <div class="grid grid-cols-2 gap-2">
+            <Select_normal
+                title="Kelas"
+                label="kelas"
+                get="id"
+                :data="kelas"
+                placeholder="Pilih kelas"
+                v-model="form_edit.kelas_id"
+                :error="form_edit.errors.kelas_id"
+            />
+            <Select_normal
+                title="Mata Pelajaran"
+                label="pelajaran"
+                get="id"
+                :data="mata_pelajaran"
+                placeholder="Pilih Pelajaran"
+                v-model="form_edit.mata_pelajaran_id"
+                :error="form_edit.errors.mata_pelajaran_id"
+            />
+
+            <div class="form-control w-full">
+                <label class="label">
+                    <span class="label-text">Mulai</span>
+                </label>
+                <input
+                    type="time"
+                    class="input input-bordered input-sm"
+                    v-model="form_edit.mulai"
+                />
+            </div>
+            <div class="form-control w-full">
+                <label class="label">
+                    <span class="label-text">Selesai</span>
+                </label>
+                <input
+                    type="time"
+                    class="input input-bordered input-sm"
+                    v-model="form_edit.selesai"
+                />
+            </div>
+        </div>
+
         <template v-slot:action>
-            <button @click="submit_hapus" class="btn bg-error" :disabled="form_hapus.processing">
+            <button
+                @click="submit_edit"
+                class="btn bg-warning"
+                :disabled="form_edit.processing"
+            >
+                <span class="loading" v-if="form_edit.processing"></span>
+                Edit
+            </button>
+        </template>
+    </modal_normal>
+
+    <modal_normal id="hapus" title="Hapus Jadwal Pelajaran">
+        Lanjutkan untuk menghapus Jadwal Pelajaran. Data yang terkait akan di
+        hapus.
+        <template v-slot:action>
+            <button
+                @click="submit_hapus"
+                class="btn bg-error"
+                :disabled="form_hapus.processing"
+            >
                 <span class="loading" v-if="form_hapus.processing"></span>
                 Lanjutkan
             </button>
@@ -308,12 +394,22 @@ export default {
             guru_id: null,
             jadwal: [],
         });
+        const form_edit = useForm({
+            id: null,
+            guru_id: null,
+            tanggal: "",
+            kelas_id: "",
+            mata_pelajaran_id: "",
+            mulai: "",
+            selesai: "",
+        });
 
         const form_hapus = useForm({
             id: null,
         });
         return {
             form_tambah,
+            form_edit,
             form_hapus,
             moment,
         };
@@ -372,21 +468,49 @@ export default {
             this.form_tambah.post(route("master.jadwal-pelajaran.store"), {
                 onSuccess: () => {
                     document.getElementById("tambah")?.click();
-                    this.form_tambah.reset()
+                    this.form_tambah.reset();
                 },
             });
         },
-        data_hapus(data){
-            this.form_hapus.id = data.id
+        data_hapus(data) {
+            this.form_hapus.id = data.id;
         },
-        submit_hapus(){
-            this.form_hapus.delete(route("master.jadwal-pelajaran.destroy",{id : this.form_hapus.id}),{
-                onSuccess : () => {
-                    document.getElementById("hapus").click()
-                    this.form_hapus.reset()
+        submit_hapus() {
+            this.form_hapus.delete(
+                route("master.jadwal-pelajaran.destroy", {
+                    id: this.form_hapus.id,
+                }),
+                {
+                    onSuccess: () => {
+                        document.getElementById("hapus").click();
+                        this.form_hapus.reset();
+                    },
                 }
-            })
-        }
+            );
+        },
+        async data_edit(data) {
+            this.form_edit.id = data.id;
+            this.form_edit.guru_id = data.user_id;
+            this.form_edit.kelas_id = data.kelas_id;
+            this.form_edit.mata_pelajaran_id = data.mata_pelajaran_id;
+            this.form_edit.tanggal = data.tanggal;
+            this.form_edit.mulai = data.mulai;
+            this.form_edit.selesai = data.selesai;
+            this.form_edit.errors = {}
+        },
+        submit_edit() {
+            this.form_edit.put(
+                route("master.jadwal-pelajaran.update", {
+                    id: this.form_edit.id,
+                }),
+                {
+                    onSuccess: () => {
+                        document.getElementById("edit").click();
+                        this.form_edit.reset();
+                    },
+                }
+            );
+        },
     },
     computed: {
         cek_jadwal() {
