@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\absensi\AbsensiController;
 use App\Http\Controllers\agama\AgamaController;
+use App\Http\Controllers\auth\CekLoginController;
+use App\Http\Controllers\auth\LoginController;
 use App\Http\Controllers\dashboard\DashboardController;
 use App\Http\Controllers\ekskul\EkskulController;
 use App\Http\Controllers\guru\GuruController;
@@ -31,7 +33,7 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    return redirect()->route("dashboard.index");
+    return redirect()->route("login");
 })->name('welcome');
 
 Route::get('/enjoy', function () {
@@ -63,3 +65,6 @@ Route::group(['prefix' => 'master', 'as' => 'master.'], function () {
 });
 
 Route::resource('dashboard', DashboardController::class);
+
+Route::get("login",LoginController::class)->name("login");
+Route::post("cek-login",CekLoginController::class)->name("cek-login");
