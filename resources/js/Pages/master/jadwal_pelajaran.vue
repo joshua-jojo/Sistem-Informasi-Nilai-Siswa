@@ -270,6 +270,16 @@
             </button>
         </template>
     </modal_lg>
+
+    <modal_normal id="hapus" title="Hapus Jadwal Pelajaran">
+        Lanjutkan untuk menghapus Jadwal Pelajaran. Data yang terkait akan di hapus.
+        <template v-slot:action>
+            <button @click="submit_hapus" class="btn bg-error" :disabled="form_hapus.processing">
+                <span class="loading" v-if="form_hapus.processing"></span>
+                Lanjutkan
+            </button>
+        </template>
+    </modal_normal>
 </template>
 <script>
 import { useStore } from "vuex";
@@ -298,8 +308,13 @@ export default {
             guru_id: null,
             jadwal: [],
         });
+
+        const form_hapus = useForm({
+            id: null,
+        });
         return {
             form_tambah,
+            form_hapus,
             moment,
         };
     },
@@ -357,9 +372,21 @@ export default {
             this.form_tambah.post(route("master.jadwal-pelajaran.store"), {
                 onSuccess: () => {
                     document.getElementById("tambah")?.click();
+                    this.form_tambah.reset()
                 },
             });
         },
+        data_hapus(data){
+            this.form_hapus.id = data.id
+        },
+        submit_hapus(){
+            this.form_hapus.delete(route("master.jadwal-pelajaran.destroy",{id : this.form_hapus.id}),{
+                onSuccess : () => {
+                    document.getElementById("hapus").click()
+                    this.form_hapus.reset()
+                }
+            })
+        }
     },
     computed: {
         cek_jadwal() {

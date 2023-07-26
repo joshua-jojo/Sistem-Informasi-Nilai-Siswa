@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\jadwal_pelajaran;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\jadwal_pelajaran\JadwalPelajaranDeleteRequests;
 use App\Http\Requests\jadwal_pelajaran\JadwalPelajaranStoreRequests;
 use App\Models\JadwalPelajaran;
 use App\Models\Kelas;
@@ -119,8 +120,9 @@ class JadwalPelajaranController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(JadwalPelajaranDeleteRequests $id)
     {
-        //
+        $jadwal = JadwalPelajaran::find($id)->first();
+        $jadwal->delete();
     }
 }
