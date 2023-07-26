@@ -4,6 +4,7 @@ use App\Http\Controllers\absensi\AbsensiController;
 use App\Http\Controllers\agama\AgamaController;
 use App\Http\Controllers\auth\CekLoginController;
 use App\Http\Controllers\auth\LoginController;
+use App\Http\Controllers\auth\LogoutController;
 use App\Http\Controllers\dashboard\DashboardController;
 use App\Http\Controllers\ekskul\EkskulController;
 use App\Http\Controllers\guru\GuruController;
@@ -68,3 +69,4 @@ Route::resource('dashboard', DashboardController::class);
 
 Route::get("login",LoginController::class)->name("login");
 Route::post("cek-login",CekLoginController::class)->name("cek-login");
+Route::post("logout",LogoutController::class)->name("logout");

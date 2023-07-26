@@ -57,6 +57,9 @@ export default {
         profil_sekolah() {
             router.get(route("pengaturan.profil-sekolah.index"));
         },
+        logout() {
+            router.post(route("logout"));
+        },
     },
 };
 </script>
@@ -72,11 +75,7 @@ export default {
             <div class="flex-none gap-2">
                 <div class="dropdown dropdown-end">
                     <label tabindex="0" class="btn btn-ghost btn-circle avatar">
-                        <div class="w-10 rounded-full">
-                            <img
-                                src="/images/stock/photo-1534528741775-53994a69daeb.jpg"
-                            />
-                        </div>
+                       test
                     </label>
                     <ul
                         tabindex="0"
@@ -88,8 +87,7 @@ export default {
                                 <span class="badge">New</span>
                             </a>
                         </li>
-                        <li><a :class="{'bg-active' : store.state.page.judul == ''}">Settings</a></li>
-                        <li><a :class="{'bg-active' : store.state.page.judul == ''}">Logout</a></li>
+                        <li><a @click="logout">Logout</a></li>
                     </ul>
                 </div>
             </div>
