@@ -4,8 +4,21 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class JadwalPelajaran extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
+
+    function user() {
+        return $this->belongsTo(User::class);
+    }
+
+    function kelas() {
+        return $this->belongsTo(Kelas::class);
+    }
+
+    function mata_pelajaran() {
+        return $this->belongsTo(MataPelajaran::class);
+    }
 }

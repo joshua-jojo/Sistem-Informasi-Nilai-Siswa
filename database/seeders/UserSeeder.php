@@ -33,15 +33,15 @@ class UserSeeder extends Seeder
         $user->password  = bcrypt("1");
         $user->save();
         
-        for ($i = 1; $i <= 10; $i++) {
-            $user = new User();
-            $user->nama = "Guru $i";
-            $user->username = "guru$i";
-            $user->role_id = 3;
-            $user->alamat = "alamat guru $i";
-            $user->no_hp = "kontak guru $i";
-            $user->password  = bcrypt("1");
-            $user->save();
-        }
+        // for ($i = 1; $i <= 10; $i++) {
+        //     $user = new User();
+        //     $user->nama = "Guru $i";
+        //     $user->username = "guru$i";
+        //     $user->role_id = 3;
+        //     $user->alamat = "alamat guru $i";
+        //     $user->no_hp = "kontak guru $i";
+        //     $user->password  = bcrypt("1");
+        //     $user->save();
+        // }
     }
 }

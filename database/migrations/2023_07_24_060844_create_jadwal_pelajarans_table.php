@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('jadwal_pelajarans', function (Blueprint $table) {
             $table->id();
             $table->integer("user_id");
+            $table->string("tanggal");
             $table->integer("kelas_id");
             $table->integer("mata_pelajaran_id");
             $table->string("mulai");
