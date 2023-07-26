@@ -8,6 +8,7 @@ export default {
             store,
         };
     },
+    props : ["user_auth"],
     methods: {
         dashboard() {
             router.get(route("dashboard.index"));
@@ -74,8 +75,12 @@ export default {
             </div>
             <div class="flex-none gap-2">
                 <div class="dropdown dropdown-end">
-                    <label tabindex="0" class="btn btn-ghost btn-circle avatar">
-                       test
+                    <label tabindex="0" class="btn btn-ghost avatar">
+                       <p class="max-w-[150px] truncate capitalize h-[20px]">
+                            {{ user_auth.nama }} (
+                                {{ user_auth?.role?.nama }}
+                            )
+                       </p>
                     </label>
                     <ul
                         tabindex="0"
