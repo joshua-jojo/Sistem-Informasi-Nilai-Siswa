@@ -41,32 +41,34 @@ Route::get('/enjoy', function () {
     return Inertia::render('enjoy_page');
 })->name('enjoy');
 
-Route::group(['prefix' => 'pengaturan', 'as' => 'pengaturan.'], function () {
-    Route::resource('profil-sekolah', ProfilSekolahController::class);
-    Route::resource('profil-user', ProfilUserController::class);
+Route::group(["middleware" => ["auth"]], function () {
+    Route::group(['prefix' => 'pengaturan', 'as' => 'pengaturan.'], function () {
+        Route::resource('profil-sekolah', ProfilSekolahController::class);
+        Route::resource('profil-user', ProfilUserController::class);
+    });
+
+    Route::group(['prefix' => 'laporan', 'as' => 'laporan.'], function () {
+        Route::resource('nilai-akademik', NilaiAkademikController::class);
+        Route::resource('absensi', AbsensiController::class);
+        Route::resource('rapor', RaporController::class);
+    });
+
+    Route::group(['prefix' => 'master', 'as' => 'master.'], function () {
+        Route::resource('ekskul', EkskulController::class);
+        Route::resource('guru', GuruController::class);
+        Route::resource('jurusan', JurusanController::class);
+        Route::resource('kelas', KelasController::class);
+        Route::resource('mata-pelajaran', MataPelajaranController::class);
+        Route::resource('murid', MuridController::class);
+        Route::resource('user', UserController::class);
+        Route::resource('wali-murid', WaliMuridController::class);
+        Route::apiResource('agama', AgamaController::class);
+        Route::apiResource('jadwal-pelajaran', JadwalPelajaranController::class);
+    });
+
+    Route::resource('dashboard', DashboardController::class);
 });
 
-Route::group(['prefix' => 'laporan', 'as' => 'laporan.'], function () {
-    Route::resource('nilai-akademik', NilaiAkademikController::class);
-    Route::resource('absensi', AbsensiController::class);
-    Route::resource('rapor', RaporController::class);
-});
-
-Route::group(['prefix' => 'master', 'as' => 'master.'], function () {
-    Route::resource('ekskul', EkskulController::class);
-    Route::resource('guru', GuruController::class);
-    Route::resource('jurusan', JurusanController::class);
-    Route::resource('kelas', KelasController::class);
-    Route::resource('mata-pelajaran', MataPelajaranController::class);
-    Route::resource('murid', MuridController::class);
-    Route::resource('user', UserController::class);
-    Route::resource('wali-murid', WaliMuridController::class);
-    Route::apiResource('agama', AgamaController::class);
-    Route::apiResource('jadwal-pelajaran', JadwalPelajaranController::class);
-});
-
-Route::resource('dashboard', DashboardController::class);
-
-Route::get("login",LoginController::class)->name("login");
-Route::post("cek-login",CekLoginController::class)->name("cek-login");
-Route::post("logout",LogoutController::class)->name("logout");
+Route::get("login", LoginController::class)->name("login");
+Route::post("cek-login", CekLoginController::class)->name("cek-login");
+Route::post("logout", LogoutController::class)->name("logout");
