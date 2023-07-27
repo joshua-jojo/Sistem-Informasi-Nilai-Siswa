@@ -61,6 +61,10 @@ export default {
         logout() {
             router.post(route("logout"));
         },
+        tampilkan(data){
+            const id = this.user_auth.role_id;
+            return data.find(e => e == id)
+        }
     },
 };
 </script>
@@ -127,7 +131,7 @@ export default {
                             tabindex="0"
                             class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
                         >
-                            <li class="menu-title">Laporan</li>
+                            <li class="menu-title">Laporan dan Data</li>
                             <li @click="nilai_akademik">
                                 <a :class="{'bg-active' : store.state.page.judul == 'Nilai Akademik'}">Nilai Akademik</a>
                             </li>
@@ -136,6 +140,7 @@ export default {
                         </ul>
                     </li>
                     <li
+                    v-if="tampilkan([1])"
                         class="text-[20px] h-[40px] dropdown dropdown-right dropdown-hover"
                     >
                         <label tabindex="1" :class="{'bg-active' : store.state.page.bagian == 'Master'}">
