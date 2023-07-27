@@ -21,4 +21,9 @@ class JadwalPelajaran extends Model
     function mata_pelajaran() {
         return $this->belongsTo(MataPelajaran::class);
     }
+    
+    public function scopeFilterByDate($query, $fromDate, $toDate)
+    {
+        return $query->whereBetween('tanggal', [$fromDate, $toDate]);
+    }
 }

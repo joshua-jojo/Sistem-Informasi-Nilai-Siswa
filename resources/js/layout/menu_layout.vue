@@ -58,6 +58,9 @@ export default {
         profil_sekolah() {
             router.get(route("pengaturan.profil-sekolah.index"));
         },
+        jadwal_mengajar() {
+            router.get(route("laporan.jadwal-mengajar.index"));
+        },
         logout() {
             router.post(route("logout"));
         },
@@ -124,7 +127,7 @@ export default {
                     <li
                         class="text-[20px] h-[40px] dropdown dropdown-right dropdown-hover"
                     >
-                        <label tabindex="0" :class="{'bg-active' : store.state.page.bagian == 'Laporan'}">
+                        <label tabindex="0" :class="{'bg-active' : (store.state.page.bagian == 'Laporan' || store.state.page.bagian == 'Data')}">
                             <i class="fa-solid fa-rectangle-list"></i>
                         </label>
                         <ul
@@ -132,6 +135,7 @@ export default {
                             class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
                         >
                             <li class="menu-title">Laporan dan Data</li>
+                            <li v-if="tampilkan([3,2])" @click="jadwal_mengajar"><a :class="{'bg-active' : store.state.page.judul == 'Jadwal Mengajar'}">Jadwal Mengajar</a></li>
                             <li @click="nilai_akademik">
                                 <a :class="{'bg-active' : store.state.page.judul == 'Nilai Akademik'}">Nilai Akademik</a>
                             </li>

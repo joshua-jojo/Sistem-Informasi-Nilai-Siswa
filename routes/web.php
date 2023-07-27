@@ -8,6 +8,7 @@ use App\Http\Controllers\auth\LogoutController;
 use App\Http\Controllers\dashboard\DashboardController;
 use App\Http\Controllers\ekskul\EkskulController;
 use App\Http\Controllers\guru\GuruController;
+use App\Http\Controllers\jadwal_mengajar\JadwalMengajarController;
 use App\Http\Controllers\jadwal_pelajaran\JadwalPelajaranController;
 use App\Http\Controllers\jurusan\JurusanController;
 use App\Http\Controllers\kelas\KelasController;
@@ -51,6 +52,7 @@ Route::group(["middleware" => ["auth"]], function () {
         Route::resource('nilai-akademik', NilaiAkademikController::class);
         Route::resource('absensi', AbsensiController::class);
         Route::resource('rapor', RaporController::class);
+        Route::apiResource('jadwal-mengajar', JadwalMengajarController::class);
     });
 
     Route::group(['prefix' => 'master', 'as' => 'master.'], function () {
