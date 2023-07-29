@@ -28,6 +28,7 @@
                     <th>No.</th>
                     <th>Kelas</th>
                     <th>Pelajaran</th>
+                    <th>Tanggal</th>
                     <th>Mulai</th>
                     <th>Selesai</th>
                     <th class="text-center">Menu</th>
@@ -37,16 +38,24 @@
                 <transition-group name="table" v-if="jadwal_mengajar.length">
                     <tr v-for="(item, index) in jadwal_mengajar" :key="item.id">
                         <td>{{ index + 1 }}</td>
-                        <td>{{item?.kelas?.kelas}}</td>
-                        <td>{{item?.mata_pelajaran.pelajaran}}</td>
-                        <td>{{item.mulai}}</td>
-                        <td>{{item.selesai}}</td>
+                        <td>{{ item?.kelas?.kelas }}</td>
+                        <td>{{ item?.mata_pelajaran.pelajaran }}</td>
+                        <td>{{ item.tanggal }}</td>
+                        <td>{{ item.mulai }}</td>
+                        <td>{{ item.selesai }}</td>
                         <td class="flex justify-center gap-2">
-                            <label for="tambah nilai" class="btn btn-xs btn-success">
-                                tambah nilai
+                            <label
+                                for="tugas/ulangan"
+                                class="btn btn-xs btn-success"
+                            >
+                                tugas / ulangan
                             </label>
 
-                            <label for="absensi" class="btn btn-xs btn-primary">
+                            <label
+                                for="absensi"
+                                @click="data_absensi(item)"
+                                class="btn btn-xs btn-primary"
+                            >
                                 Absensi
                             </label>
                         </td>
@@ -60,19 +69,203 @@
             </tbody>
         </table>
     </div>
+
+    <modal_normal id="absensi" title="Menu Absensi Murid">
+        <div class="">
+            <table class="table-xs table table-zebra">
+                <thead>
+                    <tr class="bg-sky-200">
+                        <th>Nama</th>
+                        <th>Hadir</th>
+                        <th>Izin</th>
+                        <th>Alpa</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        v-if="form_absensi.murid.length"
+                        v-for="(item, index) in form_absensi.murid"
+                        :key="index"
+                    >
+                        <td>{{ item?.user?.nama }}</td>
+                        <td>
+                            <input
+                                type="radio"
+                                :name="`radio${item.id}`"
+                                class="radio radio-sm radio-success"
+                                value="hadir"
+                                v-model="item.status"
+                            />
+                        </td>
+                        <td>
+                            <input
+                                type="radio"
+                                :name="`radio${item.id}`"
+                                class="radio radio-sm radio-warning"
+                                value="izin"
+                                v-model="item.status"
+                            />
+                        </td>
+                        <td>
+                            <input
+                                type="radio"
+                                :name="`radio${item.id}`"
+                                class="radio radio-sm radio-error"
+                                value="alpa"
+                                v-model="item.status"
+                            />
+                        </td>
+                    </tr>
+                    <tr v-else>
+                        <td colspan="99" class="text-center">
+                            Belum ada murid dalam kelas ini
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <template v-slot:action>
+            <button
+                class="btn bg-success"
+                @click="submit_absensi"
+                :disabled="form_absensi.processing"
+            >
+                <div class="loading" v-if="form_absensi.processing"></div>
+                Simpan
+            </button>
+        </template>
+    </modal_normal>
+
+    <Modal_lg id="tugas/ulangan" title="Tambah Tugas Atau Ulangan">
+        <div class="grid grid-cols-2 gap-4">
+            <div class="h-max card shadow-lg">
+                <div class="card-body gap-4">
+                    <input_normal
+                        title="Judul"
+                        v-model="form_tugas.judul"
+                        :error="form_tugas.errors.judul"
+                        placeholder="Masukkan judul tugas atau ulangan"
+                    />
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Mulai</span>
+                            </label>
+                            <input
+                                type="date"
+                                class="input input-bordered input-sm"
+                                v-model="form_tugas.mulai"
+                            />
+                            <label class="label" v-if="form_tugas.errors.mulai">
+                                <span class="label-text text-error">{{
+                                    form_tugas.errors.mulai
+                                }}</span>
+                            </label>
+                        </div>
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Selesai</span>
+                            </label>
+                            <input
+                                type="date"
+                                class="input input-bordered input-sm"
+                                v-model="form_tugas.selesai"
+                            />
+                            <label
+                                class="label"
+                                v-if="form_tugas.errors.selesai"
+                            >
+                                <span class="label-text text-error">{{
+                                    form_tugas.errors.selesai
+                                }}</span>
+                            </label>
+                        </div>
+                    </div>
+                    <button
+                        class="btn btn-success btn-sm"
+                        :disabled="form_tugas.processing"
+                    >
+                        <div class="loading" v-if="form_tugas.processing"></div>
+                        tambah
+                    </button>
+                </div>
+            </div>
+            <div class="h-full card shadow-lg">
+                <div class="card-body gap-2">
+                    <div
+                        class="card shadow-lg h-max w-full"
+                        v-for="(item, index) in 5"
+                        :key="index"
+                    >
+                        <div class="card-body">
+                            <table class="table table-xs table-zebra">
+                                <tbody>
+                                    <tr>
+                                        <td colspan="2">
+                                            Mulai JASGDHAGSHDG UUUABSAYSGAY
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Mulai</td>
+                                        <td>: mulai</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Selesai</td>
+                                        <td>: selesai</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="flex justify-end">
+                                <button class="btn btn-xs btn-error w-max">
+                                    hapus
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </Modal_lg>
 </template>
 <script>
 import { useStore } from "vuex";
 import Menu_layout from "../../layout/menu_layout.vue";
-import { router } from "@inertiajs/vue3";
-
+import { router, useForm } from "@inertiajs/vue3";
+import Modal_normal from "../../component/modal/modal_normal.vue";
+import Modal_lg from "../../component/modal/modal_lg.vue";
+import input_normal from "../../component/input/input_normal.vue";
 export default {
     layout: Menu_layout,
     props: ["params", "jadwal_mengajar"],
+    components: {
+        Modal_normal,
+        Modal_lg,
+        input_normal,
+    },
     setup() {
         const store = useStore();
         store.state.page.bagian = "Data";
         store.state.page.judul = "Jadwal Mengajar";
+
+        const form_absensi = useForm({
+            id: null,
+            status: null,
+            murid: [],
+        });
+
+        const form_tugas = useForm({
+            kelas_id: "",
+            jadwal_id: "",
+            judul: "",
+            mulai: "",
+            selesai: "",
+        });
+
+        return {
+            form_absensi,
+            form_tugas,
+        };
     },
     data() {
         return {
@@ -92,6 +285,30 @@ export default {
                     preserveState: true,
                 }
             );
+        },
+        async data_absensi(data) {
+            if (data.absensi.length) {
+                const data_absen = [...data.absensi];
+
+                await data_absen.map((e) => {
+                    console.log(e);
+                });
+                this.form_absensi.murid = data_absen;
+                this.form_absensi.status = true;
+                this.form_absensi.id = data.id;
+            } else {
+                this.form_absensi.id = data.id;
+                this.form_absensi.murid = data.kelas?.murid;
+                this.form_absensi.status = false;
+            }
+        },
+        submit_absensi() {
+            this.form_absensi.post(route("laporan.jadwal-mengajar.store"), {
+                onSuccess: () => {
+                    document.getElementById("absensi")?.click();
+                    this.form_absensi.reset();
+                },
+            });
         },
     },
     watch: {

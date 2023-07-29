@@ -21,4 +21,8 @@ class Murid extends Model
     function jurusan() {
         return $this->belongsTo(Jurusan::class);
     }
+
+    function user() {
+        return $this->belongsTo(User::class);
+    }
 }

@@ -21,6 +21,10 @@ class JadwalPelajaran extends Model
     function mata_pelajaran() {
         return $this->belongsTo(MataPelajaran::class);
     }
+
+    function absensi() {
+        return $this->hasMany(Absensi::class);
+    }
     
     public function scopeFilterByDate($query, $fromDate, $toDate)
     {

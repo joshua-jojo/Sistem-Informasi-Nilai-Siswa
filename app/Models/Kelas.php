@@ -14,4 +14,10 @@ class Kelas extends Model
     {
         return $this->belongsTo(Jurusan::class);
     }
+
+    function murid()
+    {
+        return $this->hasMany(Murid::class,'kelas_id','id');
+    }
+
 }

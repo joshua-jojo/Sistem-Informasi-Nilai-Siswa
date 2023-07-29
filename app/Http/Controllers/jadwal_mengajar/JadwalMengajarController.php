@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\jadwal_mengajar;
 
 use App\Http\Controllers\Controller;
+use App\Models\Absensi;
 use App\Models\JadwalPelajaran;
 use Illuminate\Http\Request;
 
@@ -22,7 +23,7 @@ class JadwalMengajarController extends Controller
 
         $user = auth()->user();
 
-        $jadwal_mengajar = JadwalPelajaran::with(['mata_pelajaran','kelas'])->FilterByDate($params['dari'],$params['sampai'])->where("user_id",$user->id)->get();
+        $jadwal_mengajar = JadwalPelajaran::with(['mata_pelajaran','kelas.murid.user',"absensi.user"])->FilterByDate($params['dari'],$params['sampai'])->where("user_id",$user->id)->get();
 
         $data = [
             "params" => $params,
@@ -39,7 +40,29 @@ class JadwalMengajarController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $status = $request->status;
+        $jadwal_id = $request->id;
+
+        if(!$status){
+            foreach ($request->murid as $key => $value) {
+                $absensi = new Absensi();
+                $absensi->jadwal_pelajaran_id = $jadwal_id;
+                $absensi->user_id = $value['user']['id'];
+                $absensi->status = !empty($value['status']) ? $value['status'] : "-";
+                $absensi->save();
+            }
+        }
+
+        $absensi = Absensi::where("jadwal_pelajaran_id",$jadwal_id)->get();
+        $absensi = $absensi->each(function($q) use ($request){
+            foreach ($request->murid as $key => $value) {
+                if($q->id == $value['id']){
+                    $q->status = $value['status'];
+                    break;
+                }
+            }
+            $q->save();
+        });
     }
 
     /**
