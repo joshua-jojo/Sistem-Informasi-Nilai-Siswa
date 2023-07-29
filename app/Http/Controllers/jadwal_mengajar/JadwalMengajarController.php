@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\jadwal_mengajar;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\jadwal_mengajar\JadwalMengajarTugasRequests;
 use App\Models\Absensi;
 use App\Models\JadwalPelajaran;
+use App\Models\TugasUlangan;
 use Illuminate\Http\Request;
 
 class JadwalMengajarController extends Controller
@@ -23,7 +25,7 @@ class JadwalMengajarController extends Controller
 
         $user = auth()->user();
 
-        $jadwal_mengajar = JadwalPelajaran::with(['mata_pelajaran','kelas.murid.user',"absensi.user"])->FilterByDate($params['dari'],$params['sampai'])->where("user_id",$user->id)->get();
+        $jadwal_mengajar = JadwalPelajaran::with(['mata_pelajaran','kelas.murid.user',"absensi.user","tugas"])->FilterByDate($params['dari'],$params['sampai'])->where("user_id",$user->id)->get();
 
         $data = [
             "params" => $params,
@@ -97,5 +99,15 @@ class JadwalMengajarController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    function tugas(JadwalMengajarTugasRequests $request){
+        $tugas = new TugasUlangan();
+        $tugas->kelas_id = $request->kelas_id;
+        $tugas->jadwal_pelajaran_id = $request->jadwal_pelajaran_id;
+        $tugas->judul = $request->judul;
+        $tugas->mulai = $request->mulai;
+        $tugas->selesai = $request->selesai;
+        $tugas->save();
     }
 }

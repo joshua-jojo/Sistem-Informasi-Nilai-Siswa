@@ -47,6 +47,7 @@
                             <label
                                 for="tugas/ulangan"
                                 class="btn btn-xs btn-success"
+                                @click="data_id_jadwal(item)"
                             >
                                 tugas / ulangan
                             </label>
@@ -141,12 +142,22 @@
         <div class="grid grid-cols-2 gap-4">
             <div class="h-max card shadow-lg">
                 <div class="card-body gap-4">
-                    <input_normal
-                        title="Judul"
-                        v-model="form_tugas.judul"
-                        :error="form_tugas.errors.judul"
-                        placeholder="Masukkan judul tugas atau ulangan"
-                    />
+                    <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Judul</span>
+                            </label>
+                            <input
+                                type="text"
+                                class="input input-bordered input-sm"
+                                v-model="form_tugas.judul"
+                                placeholder="Masukkan judul atau ulangan"
+                            />
+                            <label class="label" v-if="form_tugas.errors.judul">
+                                <span class="label-text text-error">{{
+                                    form_tugas.errors.judul
+                                }}</span>
+                            </label>
+                        </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div class="form-control">
                             <label class="label">
@@ -185,6 +196,7 @@
                     <button
                         class="btn btn-success btn-sm"
                         :disabled="form_tugas.processing"
+                        @click="submit_tugas"
                     >
                         <div class="loading" v-if="form_tugas.processing"></div>
                         tambah
@@ -195,7 +207,7 @@
                 <div class="card-body gap-2">
                     <div
                         class="card shadow-lg h-max w-full"
-                        v-for="(item, index) in 5"
+                        v-for="(item, index) in data_tugas"
                         :key="index"
                     >
                         <div class="card-body">
@@ -203,16 +215,16 @@
                                 <tbody>
                                     <tr>
                                         <td colspan="2">
-                                            Mulai JASGDHAGSHDG UUUABSAYSGAY
+                                            {{item.judul}}
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>Mulai</td>
-                                        <td>: mulai</td>
+                                        <td>: {{item.mulai}}</td>
                                     </tr>
                                     <tr>
                                         <td>Selesai</td>
-                                        <td>: selesai</td>
+                                        <td>: {{item.selesai}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -256,7 +268,7 @@ export default {
 
         const form_tugas = useForm({
             kelas_id: "",
-            jadwal_id: "",
+            jadwal_pelajaran_id: "",
             judul: "",
             mulai: "",
             selesai: "",
@@ -271,6 +283,7 @@ export default {
         return {
             dari: this.params.dari,
             sampai: this.params.sampai,
+            data_tugas : []
         };
     },
     methods: {
@@ -310,6 +323,25 @@ export default {
                 },
             });
         },
+        submit_tugas(){
+            this.form_tugas.post(route("master.jadwal-pelajaran.tugas"),{
+                onSuccess : () => {
+                    this.form_tugas.judul = ""
+                    this.form_tugas.mulai = ""
+                    this.form_tugas.selesai = ""
+
+                    this.data_tugas = this.jadwal_mengajar.find((e) => {
+                        return e.id == this.form_tugas.jadwal_pelajaran_id
+                    })?.tugas
+                }
+            });
+        },
+        data_id_jadwal(data){
+            this.form_tugas.jadwal_pelajaran_id = data.id
+            this.form_tugas.kelas_id = data.kelas_id
+
+            this.data_tugas = data.tugas
+        }
     },
     watch: {
         dari() {
