@@ -61,7 +61,7 @@ class GuruController extends Controller
         $user->no_hp = $request->no_hp;
         $user->alamat = $request->alamat;
         $user->role_id = 3;
-        $user->password = $request->password;
+        $user->password = bcrypt($request->password);
         $user->save();
 
         $guru_terakhir = Guru::latest()->first();

@@ -13,4 +13,8 @@ class Absensi extends Model
     function user() {
         return $this->belongsTo(User::class);
     }
+
+    function jadwal_pelajaran() {
+        return $this->belongsTo(JadwalPelajaran::class);
+    }
 }
