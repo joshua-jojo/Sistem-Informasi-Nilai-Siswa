@@ -17,4 +17,5 @@ class Absensi extends Model
     function jadwal_pelajaran() {
         return $this->belongsTo(JadwalPelajaran::class);
     }
+
 }

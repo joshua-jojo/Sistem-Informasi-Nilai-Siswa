@@ -15,16 +15,36 @@ class AbsensiController extends Controller
      */
     public function index(Request $request)
     {
-        $absensi = Absensi::with(["jadwal_pelajaran"]);
-        $absensi = $absensi->whereHas('jadwal_pelajaran',function($jadwal) use ($request) {
-            $jadwal->where("user_id",$request->user()->id);
-        })->get();
+        $params = [
+            'cari' => !empty($request->cari) ? $request->cari : '',
+            'show' => !empty($request->show) ? $request->show : 5,
+        ];
+
+        $absensi = Absensi::with(["jadwal_pelajaran.kelas", "user"]);
+        $absensi = $absensi->whereHas('jadwal_pelajaran', function ($jadwal) use ($request) {
+            $jadwal->where("user_id", $request->user()->id);
+        });
+        $absensi = $absensi->where(function ($q) use ($params) {
+           $q->whereHas('user', function ($user) use ($params) {
+                $user->where("nama", "like", "%{$params['cari']}%");
+            });
+            $q->orWhereHas('jadwal_pelajaran.kelas', function ($kelas) use ($params) {
+                $kelas->where("kelas", "like", "%{$params['cari']}%");
+            });
+            $q->orWhereHas('jadwal_pelajaran', function ($tanggal) use ($params) {
+                $tanggal->where("tanggal", "like", "%{$params['cari']}%");
+            });
+            $q->orWhere("status", "like", "%{$params['cari']}%");
+        });
+
+        $absensi = $absensi->paginate($params['show'])->withQueryString();
 
         $data = [
-            'absensi' => $absensi
+            'absensi' => $absensi,
+            'params' => $params,
+
         ];
-        dd($data);
-        return inertia()->render('laporan/absensi');
+        return inertia()->render('laporan/absensi', $data);
     }
 
     /**
