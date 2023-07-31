@@ -143,21 +143,21 @@
             <div class="h-max card shadow-lg">
                 <div class="card-body gap-4">
                     <div class="form-control">
-                            <label class="label">
-                                <span class="label-text">Judul</span>
-                            </label>
-                            <input
-                                type="text"
-                                class="input input-bordered input-sm"
-                                v-model="form_tugas.judul"
-                                placeholder="Masukkan judul atau ulangan"
-                            />
-                            <label class="label" v-if="form_tugas.errors.judul">
-                                <span class="label-text text-error">{{
-                                    form_tugas.errors.judul
-                                }}</span>
-                            </label>
-                        </div>
+                        <label class="label">
+                            <span class="label-text">Judul</span>
+                        </label>
+                        <input
+                            type="text"
+                            class="input input-bordered input-sm"
+                            v-model="form_tugas.judul"
+                            placeholder="Masukkan judul atau ulangan"
+                        />
+                        <label class="label" v-if="form_tugas.errors.judul">
+                            <span class="label-text text-error">{{
+                                form_tugas.errors.judul
+                            }}</span>
+                        </label>
+                    </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div class="form-control">
                             <label class="label">
@@ -215,24 +215,32 @@
                                 <tbody>
                                     <tr>
                                         <td colspan="2">
-                                            {{item.judul}}
+                                            {{ item.judul }}
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>Mulai</td>
-                                        <td>: {{item.mulai}}</td>
+                                        <td>: {{ item.mulai }}</td>
                                     </tr>
                                     <tr>
                                         <td>Selesai</td>
-                                        <td>: {{item.selesai}}</td>
+                                        <td>: {{ item.selesai }}</td>
                                     </tr>
                                 </tbody>
                             </table>
                             <div class="flex gap-2 justify-end">
-                                <label for="isi_nilai" @click="data_isi_nilai(item)" class="btn btn-xs btn-primary w-max">
+                                <label
+                                    for="isi_nilai"
+                                    @click="data_isi_nilai(item)"
+                                    class="btn btn-xs btn-primary w-max"
+                                >
                                     isi nilai
                                 </label>
-                                <label for="hapus_tugas" @click="data_hapus_tugas(item)" class="btn btn-xs btn-error w-max">
+                                <label
+                                    for="hapus_tugas"
+                                    @click="data_hapus_tugas(item)"
+                                    class="btn btn-xs btn-error w-max"
+                                >
                                     hapus
                                 </label>
                             </div>
@@ -246,7 +254,11 @@
         Lanjutkan untuk menghapus tugas?
 
         <template v-slot:action>
-            <button class="btn btn-error" :disabled="form_hapus_tugas.processing" @click="submit_hapus_tugas">
+            <button
+                class="btn btn-error"
+                :disabled="form_hapus_tugas.processing"
+                @click="submit_hapus_tugas"
+            >
                 <div class="loading" v-if="form_hapus_tugas.processing"></div>
                 Lanjutkan
             </button>
@@ -261,17 +273,29 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(item, index) in form_nilai_tugas.murid" :key="item.id">
-                    <td>{{item?.user?.nama}}</td>
+                <tr
+                    v-for="(item, index) in form_nilai_tugas.murid"
+                    :key="item.id"
+                >
+                    <td>{{ item?.user?.nama }}</td>
                     <td>
-                        <input type="number" class="input input-bordered input-xs" v-model="item.nilai" @input="minMax(item,$event.target.valueAsNumber)">
+                        <input
+                            type="number"
+                            class="input input-bordered input-xs"
+                            v-model="item.nilai"
+                            @input="minMax(item, $event.target.valueAsNumber)"
+                        />
                     </td>
                 </tr>
             </tbody>
         </table>
 
         <template v-slot:action>
-            <button class="btn btn-success" :disabled="form_nilai_tugas.processing" @click="submit_nilai_tugas">
+            <button
+                class="btn btn-success"
+                :disabled="form_nilai_tugas.processing"
+                @click="submit_nilai_tugas"
+            >
                 <div class="loading" v-if="form_nilai_tugas.processing"></div>
                 simpan
             </button>
@@ -313,26 +337,26 @@ export default {
         });
 
         const form_hapus_tugas = useForm({
-            id : ""
-        })
+            id: "",
+        });
 
         const form_nilai_tugas = useForm({
-            id : "",
-            murid : []
-        })
+            id: "",
+            murid: [],
+        });
 
         return {
             form_absensi,
             form_tugas,
             form_hapus_tugas,
-            form_nilai_tugas
+            form_nilai_tugas,
         };
     },
     data() {
         return {
             dari: this.params.dari,
             sampai: this.params.sampai,
-            data_tugas : []
+            data_tugas: [],
         };
     },
     methods: {
@@ -372,63 +396,76 @@ export default {
                 },
             });
         },
-        submit_tugas(){
-            this.form_tugas.post(route("master.jadwal-pelajaran.tugas"),{
-                onSuccess : () => {
-                    this.form_tugas.judul = ""
-                    this.form_tugas.mulai = ""
-                    this.form_tugas.selesai = ""
+        submit_tugas() {
+            this.form_tugas.post(route("master.jadwal-pelajaran.tugas"), {
+                onSuccess: () => {
+                    this.form_tugas.judul = "";
+                    this.form_tugas.mulai = "";
+                    this.form_tugas.selesai = "";
 
                     this.data_tugas = this.jadwal_mengajar.find((e) => {
-                        return e.id == this.form_tugas.jadwal_pelajaran_id
-                    })?.tugas
-                }
+                        return e.id == this.form_tugas.jadwal_pelajaran_id;
+                    })?.tugas;
+                },
             });
         },
-        data_id_jadwal(data){
-            this.form_tugas.jadwal_pelajaran_id = data.id
-            this.form_tugas.kelas_id = data.kelas_id
+        data_id_jadwal(data) {
+            this.form_tugas.jadwal_pelajaran_id = data.id;
+            this.form_tugas.kelas_id = data.kelas_id;
 
-            this.data_tugas = data.tugas
+            this.data_tugas = data.tugas;
         },
-        data_hapus_tugas(data){
+        data_hapus_tugas(data) {
             this.form_hapus_tugas.id = data.id;
             this.form_hapus_tugas.judul = data.judul;
         },
-        submit_hapus_tugas(){
-            this.form_hapus_tugas.post(route("master.jadwal-pelajaran.hapus_tugas"),{
-                onSuccess : () => {
-                    this.form_hapus_tugas.reset(),
-                    document.getElementById("hapus_tugas")?.click()
-                    this.data_tugas = this.jadwal_mengajar.find((e) => {
-                        return e.id == this.form_tugas.jadwal_pelajaran_id
-                    })?.tugas
+        submit_hapus_tugas() {
+            this.form_hapus_tugas.post(
+                route("master.jadwal-pelajaran.hapus_tugas"),
+                {
+                    onSuccess: () => {
+                        this.form_hapus_tugas.reset(),
+                            document.getElementById("hapus_tugas")?.click();
+                        this.data_tugas = this.jadwal_mengajar.find((e) => {
+                            return e.id == this.form_tugas.jadwal_pelajaran_id;
+                        })?.tugas;
+                    },
                 }
-            })
+            );
         },
-        data_isi_nilai(data){
-            this.form_nilai_tugas.id = data.id;
-            this.form_nilai_tugas.murid = [...data?.kelas?.murid]
+        data_isi_nilai(data) {
+            if (data.nilai.length) {
+                data.nilai.map(element => {
+                    element.user = {nama : element.murid?.nama}
+                });
+                this.form_nilai_tugas.id = data.id;
+                this.form_nilai_tugas.murid = [... data.nilai];
+            } else {
+                this.form_nilai_tugas.id = data.id;
+                this.form_nilai_tugas.murid = [...data?.kelas?.murid];
+            }
         },
-        submit_nilai_tugas(){
-            this.form_nilai_tugas.post(route("master.jadwal-pelajaran.nilai_tugas"),{
-                onSuccess : () => {
-                    this.form_nilai_tugas.reset(),
-                    document.getElementById("isi_nilai")?.click()
-                    this.data_tugas = this.jadwal_mengajar.find((e) => {
-                        return e.id == this.form_tugas.jadwal_pelajaran_id
-                    })?.tugas
+        submit_nilai_tugas() {
+            this.form_nilai_tugas.post(
+                route("master.jadwal-pelajaran.nilai_tugas"),
+                {
+                    onSuccess: () => {
+                        this.form_nilai_tugas.reset(),
+                            document.getElementById("isi_nilai")?.click();
+                        this.data_tugas = this.jadwal_mengajar.find((e) => {
+                            return e.id == this.form_tugas.jadwal_pelajaran_id;
+                        })?.tugas;
+                    },
                 }
-            })
+            );
         },
-        minMax(item,input){
-            if(input < 0 ){
-                item.nilai = 0
+        minMax(item, input) {
+            if (input < 0) {
+                item.nilai = 0;
+            } else if (input > 100) {
+                item.nilai = 100;
             }
-            else if(input > 100 ){
-                item.nilai = 100
-            }
-        }
+        },
     },
     watch: {
         dari() {

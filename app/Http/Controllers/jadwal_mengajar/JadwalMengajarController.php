@@ -28,7 +28,7 @@ class JadwalMengajarController extends Controller
 
         $user = auth()->user();
 
-        $jadwal_mengajar = JadwalPelajaran::with(['mata_pelajaran', 'kelas.murid.user', "absensi.user", "tugas.kelas.murid.user"])->FilterByDate($params['dari'], $params['sampai'])->where("user_id", $user->id)->get();
+        $jadwal_mengajar = JadwalPelajaran::with(['mata_pelajaran', 'kelas.murid.user', "absensi.user", "tugas.kelas.murid.user",'tugas.nilai.murid'])->FilterByDate($params['dari'], $params['sampai'])->where("user_id", $user->id)->get();
 
         $data = [
             "params" => $params,
@@ -123,12 +123,29 @@ class JadwalMengajarController extends Controller
 
     function nilai_tugas(JadwalMengajarNilaiTugasRequests $request)
     {
-        foreach ($request->murid as $key => $value) {
-            $nilai_tugas_ulangan = new NilaiTugasUlangan();
-            $nilai_tugas_ulangan->user_id = $value["user_id"];
-            $nilai_tugas_ulangan->tugas_ulangan_id = $value["id"];
-            $nilai_tugas_ulangan->nilai = $value["nilai"];
-            $nilai_tugas_ulangan->save();
+
+        $tugas = TugasUlangan::with("nilai")->find($request->id);
+        $jumlah_selesai = !empty($tugas->nilai) ? $tugas->nilai->count() : 0;
+
+        if(!$jumlah_selesai){
+            foreach ($request->murid as $key => $value) {
+                $nilai_tugas_ulangan = new NilaiTugasUlangan();
+                $nilai_tugas_ulangan->user_id = $value["user_id"];
+                $nilai_tugas_ulangan->tugas_ulangan_id = $request->id;
+                $nilai_tugas_ulangan->nilai = $value["nilai"];
+                $nilai_tugas_ulangan->save();
+            }
         }
+        else {
+            foreach ($tugas->nilai as $value) {
+               foreach ($request->murid as $murid) {
+                if($value->id == $murid['id']){
+                    $value->nilai = $murid['nilai'];
+                    $value->save();
+                }
+               }
+            }
+        }
+        
     }
 }

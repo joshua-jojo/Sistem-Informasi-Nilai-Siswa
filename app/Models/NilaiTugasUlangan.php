@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class NilaiTugasUlangan extends Model
 {
     use HasFactory;
+
+    function murid()
+    {
+        return $this->hasOne(User::class,'id','user_id');
+    }
 }
