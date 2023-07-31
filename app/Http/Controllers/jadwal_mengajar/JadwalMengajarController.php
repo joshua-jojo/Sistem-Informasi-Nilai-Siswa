@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\jadwal_mengajar;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\jadwal_mengajar\JadwalMengajarHapusTugasRequests;
 use App\Http\Requests\jadwal_mengajar\JadwalMengajarTugasRequests;
 use App\Models\Absensi;
 use App\Models\JadwalPelajaran;
@@ -109,5 +110,10 @@ class JadwalMengajarController extends Controller
         $tugas->mulai = $request->mulai;
         $tugas->selesai = $request->selesai;
         $tugas->save();
+    }
+
+    function hapus_tugas(JadwalMengajarHapusTugasRequests $request){
+       $tugas = TugasUlangan::find($request->id);
+       $tugas->delete();
     }
 }

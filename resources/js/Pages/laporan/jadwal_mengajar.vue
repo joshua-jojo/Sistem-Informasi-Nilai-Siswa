@@ -228,10 +228,13 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            <div class="flex justify-end">
-                                <button class="btn btn-xs btn-error w-max">
+                            <div class="flex gap-2 justify-end">
+                                <label for="isi_nilai" @click="data_isi_nilai(item)" class="btn btn-xs btn-primary w-max">
+                                    isi nilai
+                                </label>
+                                <label for="hapus_tugas" @click="data_hapus_tugas(item)" class="btn btn-xs btn-error w-max">
                                     hapus
-                                </button>
+                                </label>
                             </div>
                         </div>
                     </div>
@@ -239,6 +242,26 @@
             </div>
         </div>
     </Modal_lg>
+    <modal_normal id="hapus_tugas" title="Hapus Tugas">
+        Lanjutkan untuk menghapus tugas?
+
+        <template v-slot:action>
+            <button class="btn btn-error" :disabled="form_hapus_tugas.processing" @click="submit_hapus_tugas">
+                <div class="loading" v-if="form_hapus_tugas.processing"></div>
+                Lanjutkan
+            </button>
+        </template>
+    </modal_normal>
+    <modal_normal id="isi_nilai" title="Isi Nilai">
+        
+
+        <template v-slot:action>
+            <button class="btn btn-success" :disabled="form_hapus_tugas.processing" @click="submit_hapus_tugas">
+                <div class="loading" v-if="form_hapus_tugas.processing"></div>
+                Lanjutkan
+            </button>
+        </template>
+    </modal_normal>
 </template>
 <script>
 import { useStore } from "vuex";
@@ -274,9 +297,14 @@ export default {
             selesai: "",
         });
 
+        const form_hapus_tugas = useForm({
+            id : ""
+        })
+
         return {
             form_absensi,
             form_tugas,
+            form_hapus_tugas,
         };
     },
     data() {
@@ -341,6 +369,24 @@ export default {
             this.form_tugas.kelas_id = data.kelas_id
 
             this.data_tugas = data.tugas
+        },
+        data_hapus_tugas(data){
+            this.form_hapus_tugas.id = data.id;
+            this.form_hapus_tugas.judul = data.judul;
+        },
+        submit_hapus_tugas(){
+            this.form_hapus_tugas.post(route("master.jadwal-pelajaran.hapus_tugas"),{
+                onSuccess : () => {
+                    this.form_hapus_tugas.reset(),
+                    document.getElementById("hapus_tugas")?.click()
+                    this.data_tugas = this.jadwal_mengajar.find((e) => {
+                        return e.id == this.form_tugas.jadwal_pelajaran_id
+                    })?.tugas
+                }
+            })
+        },
+        data_isi_nilai(data){
+            console.log(data);
         }
     },
     watch: {
