@@ -18,4 +18,9 @@ class TugasUlangan extends Model
     {
         return $this->hasMany(NilaiTugasUlangan::class,'tugas_ulangan_id');
     }
+
+    function jadwal_pelajaran()
+    {
+        return $this->belongsTo(JadwalPelajaran::class);
+    }
 }

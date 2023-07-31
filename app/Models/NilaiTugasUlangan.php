@@ -13,4 +13,9 @@ class NilaiTugasUlangan extends Model
     {
         return $this->hasOne(User::class,'id','user_id');
     }
+
+    function tugas_ulangan()
+    {
+        return $this->belongsTo(TugasUlangan::class);
+    }
 }

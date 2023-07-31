@@ -106,7 +106,7 @@ export default {
         </div>
         <div class="h-full bg-base-100 flex gap-2 w-screen px-4 overflow-hidden mt-16">
             <div class="bg-base-100 py-4 w-[70px] z-10">
-                <ul
+                <ul 
                     class="menu h-max rounded-box menu-vertical shadow-[rgba(50,_50,_105,_0.15)_0px_2px_5px_0px,_rgba(0,_0,_0,_0.05)_0px_1px_1px_0px]"
                     :key="store.state.page.judul"
                 >
@@ -125,6 +125,7 @@ export default {
                         </ul>
                     </li>
                     <li
+                    v-if="tampilkan([3])"
                         class="text-[20px] h-[40px] dropdown dropdown-right dropdown-hover"
                     >
                         <label tabindex="0" :class="{'bg-active' : (store.state.page.bagian == 'Laporan' || store.state.page.bagian == 'Data')}">
