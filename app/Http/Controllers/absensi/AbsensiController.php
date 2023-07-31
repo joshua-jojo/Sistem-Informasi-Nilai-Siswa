@@ -20,12 +20,16 @@ class AbsensiController extends Controller
             'show' => !empty($request->show) ? $request->show : 5,
         ];
 
+        $is_guru = $request->user()->role_id == 3;
+
         $absensi = Absensi::with(["jadwal_pelajaran.kelas", "user"]);
-        $absensi = $absensi->whereHas('jadwal_pelajaran', function ($jadwal) use ($request) {
-            $jadwal->where("user_id", $request->user()->id);
-        });
+        if ($is_guru) {
+            $absensi = $absensi->whereHas('jadwal_pelajaran', function ($jadwal) use ($request) {
+                $jadwal->where("user_id", $request->user()->id);
+            });
+        }
         $absensi = $absensi->where(function ($q) use ($params) {
-           $q->whereHas('user', function ($user) use ($params) {
+            $q->whereHas('user', function ($user) use ($params) {
                 $user->where("nama", "like", "%{$params['cari']}%");
             });
             $q->orWhereHas('jadwal_pelajaran.kelas', function ($kelas) use ($params) {

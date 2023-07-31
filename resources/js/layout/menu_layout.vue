@@ -160,7 +160,7 @@ export default {
                             <li @click="mata_pelajaran">
                                 <a :class="{'bg-active' : store.state.page.judul == 'Mata Pelajaran'}">Mata Pelajaran</a>
                             </li>
-                            <li @click="ekskul"><a :class="{'bg-active' : store.state.page.judul == 'Ekskul'}">Ekskul</a></li>
+                            <li v-if="false" @click="ekskul"><a :class="{'bg-active' : store.state.page.judul == 'Ekskul'}">Ekskul</a></li>
                             <li @click="jadwal_pelajaran"><a :class="{'bg-active' : store.state.page.judul == 'Jadwal Pelajaran'}">Jadwal Pelajaran</a></li>
                             <li @click="agama"><a :class="{'bg-active' : store.state.page.judul == 'Agama'}">Agama</a></li>
                             <li @click="murid"><a :class="{'bg-active' : store.state.page.judul == 'Murid'}">Murid</a></li>
