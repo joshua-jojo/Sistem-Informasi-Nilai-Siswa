@@ -253,12 +253,27 @@
         </template>
     </modal_normal>
     <modal_normal id="isi_nilai" title="Isi Nilai">
-        
+        <table class="w-full table table-xs table-zebra-zebra">
+            <thead>
+                <tr class="bg-sky-200">
+                    <th>Nama</th>
+                    <th>Nilai</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(item, index) in form_nilai_tugas.murid" :key="item.id">
+                    <td>{{item?.user?.nama}}</td>
+                    <td>
+                        <input type="number" class="input input-bordered input-xs" v-model="item.nilai" @input="minMax(item,$event.target.valueAsNumber)">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
         <template v-slot:action>
-            <button class="btn btn-success" :disabled="form_hapus_tugas.processing" @click="submit_hapus_tugas">
-                <div class="loading" v-if="form_hapus_tugas.processing"></div>
-                Lanjutkan
+            <button class="btn btn-success" :disabled="form_nilai_tugas.processing" @click="submit_nilai_tugas">
+                <div class="loading" v-if="form_nilai_tugas.processing"></div>
+                simpan
             </button>
         </template>
     </modal_normal>
@@ -301,10 +316,16 @@ export default {
             id : ""
         })
 
+        const form_nilai_tugas = useForm({
+            id : "",
+            murid : []
+        })
+
         return {
             form_absensi,
             form_tugas,
             form_hapus_tugas,
+            form_nilai_tugas
         };
     },
     data() {
@@ -386,7 +407,27 @@ export default {
             })
         },
         data_isi_nilai(data){
-            console.log(data);
+            this.form_nilai_tugas.id = data.id;
+            this.form_nilai_tugas.murid = [...data?.kelas?.murid]
+        },
+        submit_nilai_tugas(){
+            this.form_nilai_tugas.post(route("master.jadwal-pelajaran.nilai_tugas"),{
+                onSuccess : () => {
+                    this.form_nilai_tugas.reset(),
+                    document.getElementById("isi_nilai")?.click()
+                    this.data_tugas = this.jadwal_mengajar.find((e) => {
+                        return e.id == this.form_tugas.jadwal_pelajaran_id
+                    })?.tugas
+                }
+            })
+        },
+        minMax(item,input){
+            if(input < 0 ){
+                item.nilai = 0
+            }
+            else if(input > 100 ){
+                item.nilai = 100
+            }
         }
     },
     watch: {

@@ -4,9 +4,11 @@ namespace App\Http\Controllers\jadwal_mengajar;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\jadwal_mengajar\JadwalMengajarHapusTugasRequests;
+use App\Http\Requests\jadwal_mengajar\JadwalMengajarNilaiTugasRequests;
 use App\Http\Requests\jadwal_mengajar\JadwalMengajarTugasRequests;
 use App\Models\Absensi;
 use App\Models\JadwalPelajaran;
+use App\Models\NilaiTugasUlangan;
 use App\Models\TugasUlangan;
 use Illuminate\Http\Request;
 
@@ -26,7 +28,7 @@ class JadwalMengajarController extends Controller
 
         $user = auth()->user();
 
-        $jadwal_mengajar = JadwalPelajaran::with(['mata_pelajaran','kelas.murid.user',"absensi.user","tugas"])->FilterByDate($params['dari'],$params['sampai'])->where("user_id",$user->id)->get();
+        $jadwal_mengajar = JadwalPelajaran::with(['mata_pelajaran', 'kelas.murid.user', "absensi.user", "tugas.kelas.murid.user"])->FilterByDate($params['dari'], $params['sampai'])->where("user_id", $user->id)->get();
 
         $data = [
             "params" => $params,
@@ -46,7 +48,7 @@ class JadwalMengajarController extends Controller
         $status = $request->status;
         $jadwal_id = $request->id;
 
-        if(!$status){
+        if (!$status) {
             foreach ($request->murid as $key => $value) {
                 $absensi = new Absensi();
                 $absensi->jadwal_pelajaran_id = $jadwal_id;
@@ -56,10 +58,10 @@ class JadwalMengajarController extends Controller
             }
         }
 
-        $absensi = Absensi::where("jadwal_pelajaran_id",$jadwal_id)->get();
-        $absensi = $absensi->each(function($q) use ($request){
+        $absensi = Absensi::where("jadwal_pelajaran_id", $jadwal_id)->get();
+        $absensi = $absensi->each(function ($q) use ($request) {
             foreach ($request->murid as $key => $value) {
-                if($q->id == $value['id']){
+                if ($q->id == $value['id']) {
                     $q->status = $value['status'];
                     break;
                 }
@@ -102,7 +104,8 @@ class JadwalMengajarController extends Controller
         //
     }
 
-    function tugas(JadwalMengajarTugasRequests $request){
+    function tugas(JadwalMengajarTugasRequests $request)
+    {
         $tugas = new TugasUlangan();
         $tugas->kelas_id = $request->kelas_id;
         $tugas->jadwal_pelajaran_id = $request->jadwal_pelajaran_id;
@@ -112,8 +115,20 @@ class JadwalMengajarController extends Controller
         $tugas->save();
     }
 
-    function hapus_tugas(JadwalMengajarHapusTugasRequests $request){
-       $tugas = TugasUlangan::find($request->id);
-       $tugas->delete();
+    function hapus_tugas(JadwalMengajarHapusTugasRequests $request)
+    {
+        $tugas = TugasUlangan::find($request->id);
+        $tugas->delete();
+    }
+
+    function nilai_tugas(JadwalMengajarNilaiTugasRequests $request)
+    {
+        foreach ($request->murid as $key => $value) {
+            $nilai_tugas_ulangan = new NilaiTugasUlangan();
+            $nilai_tugas_ulangan->user_id = $value["user_id"];
+            $nilai_tugas_ulangan->tugas_ulangan_id = $value["id"];
+            $nilai_tugas_ulangan->nilai = $value["nilai"];
+            $nilai_tugas_ulangan->save();
+        }
     }
 }

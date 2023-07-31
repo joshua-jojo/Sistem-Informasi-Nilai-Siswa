@@ -68,6 +68,7 @@ Route::group(["middleware" => ["auth"]], function () {
         Route::apiResource('jadwal-pelajaran', JadwalPelajaranController::class);
         Route::post('jadwal-mengajar/tugas', [JadwalMengajarController::class,'tugas'])->name("jadwal-pelajaran.tugas");
         Route::post('jadwal-mengajar/hapus-tugas', [JadwalMengajarController::class,'hapus_tugas'])->name("jadwal-pelajaran.hapus_tugas");
+        Route::post('jadwal-mengajar/nilai-tugas', [JadwalMengajarController::class,'nilai_tugas'])->name("jadwal-pelajaran.nilai_tugas");
     });
 
     Route::resource('dashboard', DashboardController::class);
