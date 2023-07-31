@@ -136,10 +136,10 @@ export default {
                         >
                             <li class="menu-title">Laporan dan Data</li>
                             <li v-if="tampilkan([3,2])" @click="jadwal_mengajar"><a :class="{'bg-active' : store.state.page.judul == 'Jadwal Mengajar'}">Jadwal Mengajar</a></li>
-                            <li @click="nilai_akademik">
+                            <li @click="nilai_akademik" v-if="tampilkan([2,3])">
                                 <a :class="{'bg-active' : store.state.page.judul == 'Nilai Akademik'}">Nilai Akademik</a>
                             </li>
-                            <li @click="rapor"><a :class="{'bg-active' : store.state.page.judul == 'Rapor'}">Rapor</a></li>
+                            <li @click="rapor" v-if="tampilkan([2])"><a :class="{'bg-active' : store.state.page.judul == 'Rapor'}">Rapor</a></li>
                             <li @click="absensi"><a :class="{'bg-active' : store.state.page.judul == 'Absensi'}">Absensi</a></li>
                         </ul>
                     </li>

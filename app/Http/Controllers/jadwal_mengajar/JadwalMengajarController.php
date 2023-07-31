@@ -132,7 +132,7 @@ class JadwalMengajarController extends Controller
                 $nilai_tugas_ulangan = new NilaiTugasUlangan();
                 $nilai_tugas_ulangan->user_id = $value["user_id"];
                 $nilai_tugas_ulangan->tugas_ulangan_id = $request->id;
-                $nilai_tugas_ulangan->nilai = $value["nilai"];
+                $nilai_tugas_ulangan->nilai = empty($value["nilai"]) ? 0 : $value["nilai"];
                 $nilai_tugas_ulangan->save();
             }
         }
@@ -140,7 +140,7 @@ class JadwalMengajarController extends Controller
             foreach ($tugas->nilai as $value) {
                foreach ($request->murid as $murid) {
                 if($value->id == $murid['id']){
-                    $value->nilai = $murid['nilai'];
+                    $value->nilai = empty($murid["nilai"]) ? 0 : $murid["nilai"];
                     $value->save();
                 }
                }
