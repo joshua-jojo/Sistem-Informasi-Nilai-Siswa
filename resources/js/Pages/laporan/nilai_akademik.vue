@@ -1,5 +1,5 @@
 <script>
-import { router } from "@inertiajs/vue3";
+import { router,Link } from "@inertiajs/vue3";
 import menu_layout from "../../layout/menu_layout.vue";
 import { useStore } from "vuex";
 export default {
@@ -15,6 +15,9 @@ export default {
             show: this.params.show,
             cari: this.params.cari,
         };
+    },
+    components : {
+        Link
     },
     methods: {
         get_data() {
@@ -73,6 +76,7 @@ export default {
                         <th>Nama</th>
                         <th>Kelas</th>
                         <th>Tanggal</th>
+                        <th>Pengajar</th>
                         <th>Nilai</th>
                     </tr>
                 </thead>
@@ -87,6 +91,7 @@ export default {
                             <td class="capitalize">{{ item.murid?.nama }}</td>
                             <td class="capitalize">{{ item.murid?.murid?.kelas.kelas }}</td>
                             <td class="capitalize">{{ item.tugas_ulangan?.jadwal_pelajaran?.tanggal }}</td>
+                            <td class="capitalize">{{ item.tugas_ulangan?.jadwal_pelajaran?.user?.nama }}</td>
                             <td>{{item.nilai}}</td>
                         </tr>
                         <tr v-else>

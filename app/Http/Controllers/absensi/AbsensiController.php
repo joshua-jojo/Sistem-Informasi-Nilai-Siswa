@@ -22,7 +22,7 @@ class AbsensiController extends Controller
 
         $is_guru = $request->user()->role_id == 3;
 
-        $absensi = Absensi::with(["jadwal_pelajaran.kelas", "user"]);
+        $absensi = Absensi::with(["jadwal_pelajaran.kelas","jadwal_pelajaran.user", "user"]);
         if ($is_guru) {
             $absensi = $absensi->whereHas('jadwal_pelajaran', function ($jadwal) use ($request) {
                 $jadwal->where("user_id", $request->user()->id);
@@ -34,6 +34,9 @@ class AbsensiController extends Controller
             });
             $q->orWhereHas('jadwal_pelajaran.kelas', function ($kelas) use ($params) {
                 $kelas->where("kelas", "like", "%{$params['cari']}%");
+            });
+            $q->orWhereHas('jadwal_pelajaran.user', function ($kelas) use ($params) {
+                $kelas->where("nama", "like", "%{$params['cari']}%");
             });
             $q->orWhereHas('jadwal_pelajaran', function ($tanggal) use ($params) {
                 $tanggal->where("tanggal", "like", "%{$params['cari']}%");

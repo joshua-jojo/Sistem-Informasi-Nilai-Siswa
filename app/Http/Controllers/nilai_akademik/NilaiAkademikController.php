@@ -42,6 +42,9 @@ class NilaiAkademikController extends Controller
             $q->orWhereHas('tugas_ulangan.jadwal_pelajaran', function ($data_kelas) use ($params) {
                 $data_kelas->where("tanggal", "like", "%{$params['cari']}%");
             });
+            $q->orWhereHas('tugas_ulangan.jadwal_pelajaran.user', function ($data_kelas) use ($params) {
+                $data_kelas->where("nama", "like", "%{$params['cari']}%");
+            });
             $q->orWhere("nilai", "like", "%{$params['cari']}%");
         });
 

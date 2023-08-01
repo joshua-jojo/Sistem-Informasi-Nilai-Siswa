@@ -125,7 +125,7 @@ export default {
                         </ul>
                     </li>
                     <li
-                    v-if="tampilkan([3])"
+                    v-if="tampilkan([2,3])"
                         class="text-[20px] h-[40px] dropdown dropdown-right dropdown-hover"
                     >
                         <label tabindex="0" :class="{'bg-active' : (store.state.page.bagian == 'Laporan' || store.state.page.bagian == 'Data')}">
@@ -140,7 +140,7 @@ export default {
                             <li @click="nilai_akademik" v-if="tampilkan([2,3])">
                                 <a :class="{'bg-active' : store.state.page.judul == 'Nilai Akademik'}">Nilai Akademik</a>
                             </li>
-                            <li @click="rapor" v-if="tampilkan([2])"><a :class="{'bg-active' : store.state.page.judul == 'Rapor'}">Rapor</a></li>
+                            <li @click="rapor" v-if="tampilkan([0])"><a :class="{'bg-active' : store.state.page.judul == 'Rapor'}">Rapor</a></li>
                             <li @click="absensi"><a :class="{'bg-active' : store.state.page.judul == 'Absensi'}">Absensi</a></li>
                         </ul>
                     </li>

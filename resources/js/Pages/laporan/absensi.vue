@@ -73,6 +73,7 @@ export default {
                         <th>Nama</th>
                         <th>Kelas</th>
                         <th>Tanggal</th>
+                        <th>Pengajar</th>
                         <th>Status</th>
                     </tr>
                 </thead>
@@ -87,6 +88,7 @@ export default {
                             <td class="capitalize">{{ item.user?.nama }}</td>
                             <td class="capitalize">{{ item.jadwal_pelajaran?.kelas.kelas }}</td>
                             <td class="capitalize">{{ item.jadwal_pelajaran?.tanggal }}</td>
+                            <td class="capitalize">{{ item.jadwal_pelajaran?.user?.nama }}</td>
                             <td class="capitalize">{{ item.status }}</td>
                         </tr>
                         <tr v-else>

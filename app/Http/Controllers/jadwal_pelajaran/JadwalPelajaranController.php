@@ -44,7 +44,7 @@ class JadwalPelajaranController extends Controller
         $jadwal_pelajaran = $jadwal_pelajaran->orderBy("tanggal","asc");
         $jadwal_pelajaran = $jadwal_pelajaran->paginate($params['show'])->withQueryString();
 
-        $guru = User::where("role_id", 3)->get();
+        $guru = User::where("role_id", 3)->orWhere("role_id", 2)->get();
         $kelas = Kelas::orderBy("kelas", "asc")->get();
         $mata_pelajaran = MataPelajaran::orderBy("pelajaran", "asc")->get();
 
