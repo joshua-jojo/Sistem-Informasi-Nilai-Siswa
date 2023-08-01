@@ -172,6 +172,7 @@ export default {
                     </li>
                     <li
                         class="text-[20px] h-[40px] dropdown dropdown-right dropdown-hover"
+                        v-if="false"
                     >
                         <label tabindex="1" :class="{'bg-active' : store.state.page.bagian == 'Pengaturan'}">
                             <i class="fa fa-gear"></i>
