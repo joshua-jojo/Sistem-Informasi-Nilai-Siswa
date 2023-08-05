@@ -21,13 +21,23 @@ class CekLoginController extends Controller
             "password" => $request->password,
         ]);
 
-        if(!$login){
+        if (!$login) {
             return back()->withErrors([
                 "login_status" => "Email atau password salah."
             ]);
         }
 
-        return redirect()->route("dashboard.index");
+        $wali_murid = auth()->user()->role_id == 5;
+        if ($wali_murid) {
+            return redirect()->route("interface.wali-murid.index");
+        }
 
+        if (auth()->user()->role_id != 4) {
+            return redirect()->route("dashboard.index");
+        }
+
+        return back()->withErrors([
+            "login_status" => "Email atau password salah."
+        ]);
     }
 }

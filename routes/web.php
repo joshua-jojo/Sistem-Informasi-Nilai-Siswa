@@ -8,6 +8,7 @@ use App\Http\Controllers\auth\LogoutController;
 use App\Http\Controllers\dashboard\DashboardController;
 use App\Http\Controllers\ekskul\EkskulController;
 use App\Http\Controllers\guru\GuruController;
+use App\Http\Controllers\interface\wali_murid\WaliMuridInterfaceController;
 use App\Http\Controllers\jadwal_mengajar\JadwalMengajarController;
 use App\Http\Controllers\jadwal_pelajaran\JadwalPelajaranController;
 use App\Http\Controllers\jurusan\JurusanController;
@@ -72,6 +73,9 @@ Route::group(["middleware" => ["auth"]], function () {
     });
 
     Route::resource('dashboard', DashboardController::class);
+    Route::group(['prefix' => 'interface','as' => 'interface.'],function () {
+        Route::apiResource("wali-murid",WaliMuridInterfaceController::class);
+    });
 });
 
 Route::get("login", LoginController::class)->name("login");
