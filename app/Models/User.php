@@ -26,4 +26,8 @@ class User extends Authenticatable
     public function guru() {
         return $this->hasOne(Guru::class);
     }
+
+    public function raport() {
+        return $this->hasMany(Raport::class);
+    }
 }

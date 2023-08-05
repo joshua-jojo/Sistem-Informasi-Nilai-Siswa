@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\rapor;
 
 use App\Http\Controllers\Controller;
+use App\Models\Murid;
+use App\Models\Raport;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class RaporController extends Controller
@@ -12,9 +15,21 @@ class RaporController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return inertia()->render('laporan/rapor');
+        $params = [
+            'cari' => !empty($request->cari) ? $request->cari : '',
+            'show' => !empty($request->show) ? $request->show : 5,
+        ];
+
+        $murid = Murid::with(["user"])->get();
+        $raport = User::with(["murid.kelas", "murid.jurusan", "raport"])->has("raport")->where("nama", "like", "%{$params['cari']}%")->paginate($params["show"])->withQueryString();
+        $data = [
+            "params" => $params,
+            "murid" => $murid,
+            "raport" => $raport,
+        ];
+        return inertia()->render('laporan/rapor', $data);
     }
 
     /**
@@ -35,7 +50,13 @@ class RaporController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        foreach ($request->data_raport as $key => $value) {
+            $raport = new Raport();
+            $raport->user_id = $request->user_id;
+            $raport->pelajaran = $value["nama"];
+            $raport->nilai = $value["nilai"];
+            $raport->save();
+        }
     }
 
     /**
@@ -80,6 +101,7 @@ class RaporController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::find($id);
+        $user->raport()->delete();
     }
 }
