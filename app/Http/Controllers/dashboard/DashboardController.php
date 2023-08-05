@@ -3,6 +3,12 @@
 namespace App\Http\Controllers\dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\Guru;
+use App\Models\Jurusan;
+use App\Models\Kelas;
+use App\Models\MataPelajaran;
+use App\Models\Murid;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -14,7 +20,22 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return inertia()->render('dashboard/dashboard');
+        $pelajaran = MataPelajaran::all()->count();
+        $kelas = Kelas::all()->count();
+        $murid = User::where("role_id",4)->count();
+        $guru = User::where("role_id",3)->orWhere("role_id",2)->count();
+        $jurusan = Jurusan::all()->count();
+        $user = User::all()->count();
+
+        $data = [
+            "pelajaran" => $pelajaran,
+            "kelas" => $kelas,
+            "murid" => $murid,
+            "guru" => $guru,
+            "jurusan" => $jurusan,
+            "user" => $user,
+        ];
+        return inertia()->render('dashboard/dashboard',$data);
     }
 
     /**
