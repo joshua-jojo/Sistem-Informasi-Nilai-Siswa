@@ -37,6 +37,7 @@ export default {
             cari: this.params.cari,
             input_mapel: {
                 nama: null,
+                kkm: null,
                 nilai: null,
             },
             data_show: [],
@@ -48,6 +49,7 @@ export default {
             this.form_tambah.data_raport.unshift(data);
             this.input_mapel.nilai = null;
             this.input_mapel.nama = null;
+            this.input_mapel.kkm = null;
         },
         submit_tambah() {
             this.form_tambah.post(route("laporan.rapor.store"), {
@@ -74,12 +76,15 @@ export default {
             this.form_hapus.nama = item.nama;
         },
         submit_hapus() {
-            this.form_hapus.delete(route("laporan.rapor.destroy",{id : this.form_hapus.user_id}), {
-                onSuccess: () => {
-                    this.form_hapus.reset();
-                    document.getElementById("hapus").click();
-                },
-            });
+            this.form_hapus.delete(
+                route("laporan.rapor.destroy", { id: this.form_hapus.user_id }),
+                {
+                    onSuccess: () => {
+                        this.form_hapus.reset();
+                        document.getElementById("hapus").click();
+                    },
+                }
+            );
         },
     },
     watch: {
@@ -230,6 +235,14 @@ export default {
                             />
                         </div>
                         <div class="form-control">
+                            <label class="label">KKM</label>
+                            <input
+                                type="number"
+                                class="input input-bordered"
+                                v-model="input_mapel.kkm"
+                            />
+                        </div>
+                        <div class="form-control">
                             <label class="label">Nilai</label>
                             <input
                                 type="number"
@@ -239,7 +252,13 @@ export default {
                         </div>
                         <button
                             @click="tambah_data"
-                            :disabled="!(input_mapel.nama && input_mapel.nilai)"
+                            :disabled="
+                                !(
+                                    input_mapel.nama &&
+                                    input_mapel.kkm &&
+                                    input_mapel.nilai
+                                )
+                            "
                             class="btn btn-success mt-4"
                         >
                             tambah

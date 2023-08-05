@@ -1,5 +1,5 @@
 <template lang="">
-    <div class="flex flex-col gap-4 bg-base-300 h-screen w-screen">
+    <div class="flex flex-col gap-4 bg-base-300 pb-4 overflow-x-hidden">
         <div class="navbar bg-base-100 shadow-md">
             <div class="flex-1">
                 <a class="btn btn-ghost normal-case text-xl">daisyUI</a>
@@ -78,6 +78,34 @@
                 </div>
             </div>
 
+            <div class="card shadow-md bg-base-200">
+                <div class="card-body">
+                    <div class="font-bold mb-4">Nilai Raport</div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Pelajaran</th>
+                                <th>KKM</th>
+                                <th>Nilai</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                v-for="(item, index) in raport.raport"
+                                v-if="raport.raport.length"
+                                :key="index"
+                            >
+                                <td>{{index + 1}}</td>
+                                <td>{{item.pelajaran}}</td>
+                                <td>{{item.kkm}}</td>
+                                <td>{{item.nilai}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             <div class="grid grid-cols-2 gap-4">
                 <div class="card shadow-lg bg-base-200">
                     <div class="card-body">
@@ -107,9 +135,20 @@
                                                     )
                                                 }}
                                             </td>
-                                            <td>{{item?.jadwal_pelajaran?.mata_pelajaran?.pelajaran}}</td>
-                                            <td>{{item?.jadwal_pelajaran?.user?.nama}}</td>
-                                            <td>{{item?.status}}</td>
+                                            <td>
+                                                {{
+                                                    item?.jadwal_pelajaran
+                                                        ?.mata_pelajaran
+                                                        ?.pelajaran
+                                                }}
+                                            </td>
+                                            <td>
+                                                {{
+                                                    item?.jadwal_pelajaran?.user
+                                                        ?.nama
+                                                }}
+                                            </td>
+                                            <td>{{ item?.status }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -135,11 +174,29 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="(item, index) in nilai" :key="index">
-                                            <td>{{item?.tugas_ulangan?.jadwal_pelajaran?.mata_pelajaran?.pelajaran}}</td>
-                                            <td>{{item?.tugas_ulangan?.jadwal_pelajaran?.user?.nama}}</td>
-                                            <td>{{item?.tugas_ulangan?.judul}}</td>
-                                            <td>{{item?.nilai}}</td>
+                                        <tr
+                                            v-for="(item, index) in nilai"
+                                            :key="index"
+                                        >
+                                            <td>
+                                                {{
+                                                    item?.tugas_ulangan
+                                                        ?.jadwal_pelajaran
+                                                        ?.mata_pelajaran
+                                                        ?.pelajaran
+                                                }}
+                                            </td>
+                                            <td>
+                                                {{
+                                                    item?.tugas_ulangan
+                                                        ?.jadwal_pelajaran?.user
+                                                        ?.nama
+                                                }}
+                                            </td>
+                                            <td>
+                                                {{ item?.tugas_ulangan?.judul }}
+                                            </td>
+                                            <td>{{ item?.nilai }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -155,7 +212,7 @@
 import { router } from "@inertiajs/vue3";
 
 export default {
-    props: ["user_auth", "murid", "absensi","nilai"],
+    props: ["user_auth", "murid", "absensi", "nilai", "raport"],
     methods: {
         logout() {
             router.post(route("logout"));
@@ -188,7 +245,9 @@ export default {
                 "Sabtu",
             ];
 
-            return `${namaHari[day.getDay()]}, ${day.getDay()} ${namaBulan[day.getMonth()]} ${day.getFullYear()}`;
+            return `${namaHari[day.getDay()]}, ${day.getDay()} ${
+                namaBulan[day.getMonth()]
+            } ${day.getFullYear()}`;
         },
     },
 };

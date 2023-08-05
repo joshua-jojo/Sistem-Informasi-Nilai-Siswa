@@ -55,6 +55,7 @@ class RaporController extends Controller
             $raport->user_id = $request->user_id;
             $raport->pelajaran = $value["nama"];
             $raport->nilai = $value["nilai"];
+            $raport->kkm = $value["kkm"];
             $raport->save();
         }
     }
