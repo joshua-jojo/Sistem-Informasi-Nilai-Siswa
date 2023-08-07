@@ -92,14 +92,14 @@
                         </thead>
                         <tbody>
                             <tr
-                                v-for="(item, index) in raport.raport"
-                                v-if="raport.raport.length"
+                                v-for="(item, index) in raport?.raport"
+                                v-if="raport?.raport.length"
                                 :key="index"
                             >
-                                <td>{{index + 1}}</td>
-                                <td>{{item.pelajaran}}</td>
-                                <td>{{item.kkm}}</td>
-                                <td>{{item.nilai}}</td>
+                                <td>{{ index + 1 }}</td>
+                                <td>{{ item.pelajaran }}</td>
+                                <td>{{ item.kkm }}</td>
+                                <td>{{ item.nilai }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -112,6 +112,24 @@
                         <div class="flex flex-col gap-4">
                             <div class="flex flex-col gap-2">
                                 <h2 class="font-semibold">Daftar Absensi</h2>
+
+                                <table class="max-w-xs table table-xs">
+                                    <tbody>
+                                        <tr>
+                                            <td>Hadir</td>
+                                            <td>: {{data_absen?.hadir ? data_absen?.hadir : 0}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Izin</td>
+                                            <td>: {{data_absen?.izin ? data_absen?.izin : 0}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Alpa</td>
+                                            <td>: {{data_absen?.alpa ? data_absen?.alpa : 0}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
                                 <table
                                     class="table table-sm table-zebra w-full"
                                 >
@@ -212,7 +230,7 @@
 import { router } from "@inertiajs/vue3";
 
 export default {
-    props: ["user_auth", "murid", "absensi", "nilai", "raport"],
+    props: ["user_auth", "murid", "absensi", "nilai", "raport", "data_absen"],
     methods: {
         logout() {
             router.post(route("logout"));

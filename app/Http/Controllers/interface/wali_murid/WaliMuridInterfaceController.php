@@ -21,13 +21,17 @@ class WaliMuridInterfaceController extends Controller
         $wali_murid = auth()->user()->id;
         $murid = User::with(["wali_murid.murid.murid.kelas", "wali_murid.murid.murid.jurusan", "wali_murid.murid.murid.agama"])->find($wali_murid);
         $absensi = Absensi::with(["user", "jadwal_pelajaran.user", 'jadwal_pelajaran.mata_pelajaran'])->where("user_id", $murid->wali_murid->murid->id)->get();
-        $nilai = NilaiTugasUlangan::with(["tugas_ulangan.jadwal_pelajaran.mata_pelajaran","tugas_ulangan.jadwal_pelajaran.user"])->where("user_id",$murid->wali_murid->murid->id)->get();
-        $raport = User::with("raport")->has("raport")->where("id",$murid->wali_murid->murid_id)->latest()->first();
+        $data_absen = $absensi->groupBy("status")->map(function ($q) {
+            return $q->count();
+        });
+        $nilai = NilaiTugasUlangan::with(["tugas_ulangan.jadwal_pelajaran.mata_pelajaran", "tugas_ulangan.jadwal_pelajaran.user"])->where("user_id", $murid->wali_murid->murid->id)->get();
+        $raport = User::with("raport")->has("raport")->where("id", $murid->wali_murid->murid_id)->latest()->first();
         return inertia()->render("interface/wali_murid", [
             "murid" => $murid,
             "absensi" => $absensi,
             "nilai" => $nilai,
             "raport" => $raport,
+            "data_absen" => $data_absen,
         ]);
     }
 
